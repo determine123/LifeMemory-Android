@@ -9,3 +9,6 @@
 结构与交互检查：node check.mjs
 
 公开宣传可将本目录部署到静态托管，或在 GitHub 仓库 Settings → Pages 选择 main 分支的 /docs 目录。本次 Sites 发布因远端TLS握手失败未完成；不要将尚未发布的网址作为宣传链接。
+
+
+GitHub Pages 已启用，正式网页：https://determine123.github.io/LifeMemory-Android/ （默认英文，支持中文切换）。

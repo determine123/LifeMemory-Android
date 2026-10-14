@@ -1,6 +1,6 @@
 # LifeMemory Android
 
-[简体中文](README.zh-CN.md) · [English promotional page](docs/index.html) · [中文宣传网页](docs/zh.html)
+[简体中文](README.zh-CN.md) · [Website](https://determine123.github.io/LifeMemory-Android/) · [中文网页](https://determine123.github.io/LifeMemory-Android/zh.html)
 
 **Keep a little of your day.** A local-first Android life journal inspired by Omi, Memex and Auday, with a processing workspace inspired by Orca. Independently implemented in native Java; not an affiliated product.
 
@@ -22,7 +22,7 @@ Version **0.5.0** opens in **English by default**, including on Chinese-language
 
 The full bilingual landing page is in **[docs/](docs/README.md)**. `docs/index.html` is English; `docs/zh.html` is Chinese. Both have language links, responsive layouts, interactive feature demos and keyboard navigation. Demo records are fictional. No analytics, accounts or backend.
 
-Open the HTML file locally or run `python -m http.server 8767 --directory docs`. For GitHub Pages, select **Settings → Pages → main → /docs**. Online hosting is not yet enabled; an HTML source link is not a live website URL.
+Open the HTML file locally or run `python -m http.server 8767 --directory docs`. For GitHub Pages, select **Settings → Pages → main → /docs**. The promotional website is live at [https://determine123.github.io/LifeMemory-Android/](https://determine123.github.io/LifeMemory-Android/).
 
 ## Build and install
 

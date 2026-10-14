@@ -1,6 +1,6 @@
 # 拾光 · LifeMemory v0.5.0
 
-[English](README.md) · [英文宣传网页](docs/index.html) · [中文宣传网页](docs/zh.html)
+[English](README.md) · [英文宣传网页](https://determine123.github.io/LifeMemory-Android/) · [中文宣传网页](https://determine123.github.io/LifeMemory-Android/zh.html)
 
 ## 默认英文与中文切换
 
