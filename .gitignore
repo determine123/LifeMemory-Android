@@ -21,3 +21,5 @@ test-build-output.log
 *.mp3
 *.apk
 website/
+
+app/libs/*.aar

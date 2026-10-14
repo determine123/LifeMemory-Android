@@ -53,12 +53,28 @@ public class RecapEngine {
           .append("：")
           .append(content);
       JSONObject meta = e.metadata();
-      if (meta.has("place")) b.append(" · 地点：").append(meta.optString("place"));
-      if (meta.has("activity")) b.append(" · 活动：").append(meta.optString("activity"));
-      if (meta.has("mood")) b.append(" · 自评状态：").append(meta.optString("mood"));
+      if (meta.has("place")) b.append(" · 地点：").append(shortMeta(meta.optString("place")));
+      if (meta.has("activity")) b.append(" · 活动：").append(shortMeta(meta.optString("activity")));
+      if (meta.has("mood")) b.append(" · 自评状态：").append(shortMeta(meta.optString("mood")));
       b.append('\n');
     }
     return b.toString();
+  }
+
+  private static String shortMeta(String s) {
+    return s.length() > 200 ? s.substring(0, 200) : s;
+  }
+
+  static List<Store.Event> contextEvents(List<Store.Event> all) {
+    List<Store.Event> out = new ArrayList<>();
+    int characters = 0;
+    for (Store.Event event : all) {
+      int size = evidence(Collections.singletonList(event), 1).length();
+      if (out.size() == 300 || characters + size > 60000) break;
+      out.add(event);
+      characters += size;
+    }
+    return out;
   }
 
   public static String generate(Context c, String day) throws Exception {
@@ -66,6 +82,7 @@ public class RecapEngine {
       List<Store.Event> events = db.events(day, null);
       if (events.isEmpty()) return "";
       String fingerprint = Store.fingerprint(events);
+      List<Store.Event> provided = contextEvents(events);
       String result;
       if (new Ai(c).enabled()) {
         String style = c.getSharedPreferences("life", 0).getString("recap_style", "温暖日记");
@@ -77,15 +94,13 @@ public class RecapEngine {
                         + "。summary用一句中文概括一天最重要的经历、决定或进展，目标35至50字，含标点最多50字；记录少时可更短，不凑字数，不列流水账。"
                         + "不能编造事实、情绪、人物或健康结论，情绪只依据用户自评。未完成转写不推测其内容，数据不足须说明。"
                         + "summary不附记录编号；用户可通过原始记录核对。待办单独输出，不塞入概览。输出严格"
-                        + " JSON：{\"summary\":\"50字内每日概览\",\"todos\":[\"原文明确且未完成的待办\"]}。不要代码围栏。",
-                    evidence(events, 300));
-        JSONObject parsed = parse(json);
+                        + " JSON：{\"summary\":\"50字内每日概览\",\"events\":[{\"text\":\"关键事件\",\"source_ids\":[1]}],\"todos\":[{\"text\":\"原文明确未完成的待办\",\"source_ids\":[1]}]}。source_ids必须是所提供记录的真实编号，不能猜测。不要代码围栏。",
+                    evidence(provided, 300));
+        JSONObject parsed = RecapSources.validate(parse(json), provided);
         result = compact(parsed.getString("summary"));
         if (result.isEmpty()) throw new JSONException("AI未返回每日概览，请重试");
-        db.recap(
-            day,
-            result,
-            parsed.optJSONArray("todos") == null ? new JSONArray() : parsed.getJSONArray("todos"));
+        parsed.put("provided_count", provided.size()).put("record_count", events.size());
+        db.recapDetailed(day, parsed);
       } else {
         if (I18n.english(c)) {
           int pending = 0;
@@ -97,7 +112,9 @@ public class RecapEngine {
                       + " records today. "
                       + (pending > 0 ? pending + " audio pending." : "AI is not configured."));
         } else result = localSummary(events);
-        db.summary(day, result);
+        JSONObject local = RecapSources.local(result, provided);
+        local.put("provided_count", provided.size()).put("record_count", events.size());
+        db.recapDetailed(day, local);
       }
       db.summarySnapshot(day, fingerprint);
       return result;

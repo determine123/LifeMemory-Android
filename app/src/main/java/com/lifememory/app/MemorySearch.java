@@ -71,7 +71,9 @@ public class MemorySearch {
                   + " "
                   + meta.optString("activity")
                   + " "
-                  + meta.optString("mood"))
+                  + meta.optString("mood")
+                  + " "
+                  + meta.optJSONArray("topics"))
               .toLowerCase(Locale.ROOT);
       for (String token : tokens) if (text.contains(token)) score++;
       scores.put(e.id, score);

@@ -1,8 +1,8 @@
-# 拾光 · LifeMemory v0.7.0
+# 拾光 · LifeMemory v0.8.0-alpha03
 
 ## 下载新版
 
-[下载 LifeMemory v0.7.0 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.7.0/LifeMemory-v0.7.0-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.7.0)
+[下载 LifeMemory v0.8.0-alpha03 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha03/LifeMemory-v0.8.0-alpha03-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha03)
 
 适用于 Android 8.0 及以上，调试测试版。按提示允许浏览器安装；覆盖安装可保留原有数据，离线语音模型需另行导入。
 
@@ -17,13 +17,13 @@
 
 ## 默认英文与中文切换
 
-App默认使用英文，不跟随系统语言自动切换；顶部语言按钮可切换简体中文，选择会保存。首页、处理中心、设置、弹窗、播放器与通知支持双语。原有记录、转写和说话人名称不会自动翻译；新的AI回答按所选语言生成，每日概览仍最多50个Unicode字符（含标点）。离线语音模型仍使用中文Vosk模型。
+App默认使用英文，不跟随系统语言自动切换；顶部语言按钮可切换简体中文，选择会保存。首页、处理中心、设置、弹窗、播放器与通知支持双语。原有记录、转写和说话人名称不会自动翻译；新的AI回答按所选语言生成，每日概览仍最多50个Unicode字符（含标点）。离线转写支持中文Vosk和可选的多语言SenseVoice，详见[模型配置](SHERPA-MODELS.md)。
 
 参考 Omi 的语音记忆、Memex 的本地多模态时间线和 Auday 的重要时刻/每日回顾思路，独立实现的原生 Android 应用。无需账号或自建后端，最低 Android 8.0。
 
 ## 安装
 
-本地构建包为 `dist/LifeMemory-v0.5.0-debug.apk`，未提交至源码仓库。可以覆盖旧版升级；不要先卸载，以免清除本地数据。自行构建见下方说明。
+本地构建包为 `dist/LifeMemory-v0.8.0-alpha03-debug.apk`，未提交至源码仓库。可以覆盖旧版升级；不要先卸载，以免清除本地数据。自行构建见下方说明。
 
 ## v0.4 处理中心与宣传网页
 
@@ -95,3 +95,12 @@ Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、�
 欢迎关注 [B 站主页](https://space.bilibili.com/1553355526)，了解项目进展与使用演示。
 
 抖音号：**ltm1524001843**，在抖音搜索该账号即可关注 determine。
+
+## v0.8.0-alpha03 三阶段集成
+
+- 可选sherpa-onnx SenseVoice转写及说话人分离，独立进程运行；支持自动估计或指定2–8人，长按片段手动纠正。
+- 五十字回顾下展示带来源的事件，待办可打开原始文字或回听音频；旧回顾重新生成后可获得链接。
+- 给记录添加主题，跨日期回顾并搜索历史转写。
+- 合并导入v2/v3备份，重映射来源链接，重复导入同一份备份跳过记录；文件校验或数据错误时回滚，保留现有日记。
+
+模型不包含在APK中，需要另行导入，见[模型配置](SHERPA-MODELS.md)。自动分离可能过度区分说话人，不代表真实身份识别。测试与限制见[新版报告](TESTING-v0.8-alpha03.md)。构建前运行 `./fetch-dependencies.ps1` 获取并校验语音运行库。

@@ -114,13 +114,47 @@ class FeatureUi {
           a.button(
               I18n.t(a, "回听此刻"),
               () -> {
-                Store.Event audio = a.db.anchor(e.metadata().optLong("anchor_time", 0));
+                Store.Event audio =
+                    e.metadata().has("anchor_event_id")
+                        ? a.db.find(e.metadata().optLong("anchor_event_id"))
+                        : a.db.anchor(e.metadata().optLong("anchor_time", 0));
                 if (audio == null || audio.path.isEmpty()) {
                   a.message(I18n.t(a, "对应录音尚未保存或已不存在。"));
                   return;
                 }
                 a.play(audio.path, e.metadata().optLong("offset_ms", 0));
               }));
+  }
+
+  void topics(Store.Event e) {
+    JSONArray current = e.metadata().optJSONArray("topics");
+    StringBuilder value = new StringBuilder();
+    if (current != null)
+      for (int i = 0; i < current.length(); i++) {
+        if (i > 0) value.append(", ");
+        value.append(current.optString(i));
+      }
+    EditText input =
+        a.editor(I18n.english(a) ? "Topics separated by commas" : "主题，以逗号分隔", value.toString());
+    new AlertDialog.Builder(a)
+        .setTitle(I18n.english(a) ? "Record topics" : "记录主题")
+        .setView(input)
+        .setNegativeButton(I18n.t(a, "取消"), null)
+        .setPositiveButton(
+            I18n.t(a, "保存"),
+            (d, w) -> {
+              Store.Event latest = a.db.find(e.id);
+              if (latest == null) return;
+              try {
+                JSONObject meta = latest.metadata();
+                meta.put("topics", Topics.parse(input.getText().toString()));
+                a.db.metadata(e.id, meta);
+                a.render();
+              } catch (JSONException error) {
+                a.message(error.getMessage());
+              }
+            })
+        .show();
   }
 
   void transcript(Store.Event e) {
@@ -182,6 +216,7 @@ class FeatureUi {
                   if (item.optLong("start_ms") == segment.optLong("start_ms")
                       && item.optString("text").equals(segment.optString("text"))) {
                     item.put("speaker", name.getText().toString().trim());
+                    item.put("speaker_manual", true);
                     break;
                   }
                 }
@@ -215,7 +250,10 @@ class FeatureUi {
               a.button(
                   I18n.t(a, "回听标记"),
                   () -> {
-                    Store.Event audio = a.db.anchor(e.metadata().optLong("anchor_time", 0));
+                    Store.Event audio =
+                        e.metadata().has("anchor_event_id")
+                            ? a.db.find(e.metadata().optLong("anchor_event_id"))
+                            : a.db.anchor(e.metadata().optLong("anchor_time", 0));
                     if (audio != null) a.play(audio.path, e.metadata().optLong("offset_ms", 0));
                     else a.message(I18n.t(a, "等待对应片段保存。"));
                   }));
@@ -294,8 +332,8 @@ class FeatureUi {
               .setMessage(
                   I18n.english(a)
                       ? "Audio recording will resume when the app is visible. Android 11+ uses a"
-                            + " boot notification. Manual Stop disarms this setting. Grant"
-                            + " microphone/notification permissions using Start recording first."
+                          + " boot notification. Manual Stop disarms this setting. Grant"
+                          + " microphone/notification permissions using Start recording first."
                       : "应用可见时恢复录音；Android 11及以上开机通过通知恢复。手动停止会取消自动恢复。请先使用开始记录授予麦克风和通知权限。")
               .setPositiveButton(
                   I18n.english(a) ? "Enable" : "启用",
@@ -337,9 +375,13 @@ class FeatureUi {
             I18n.t(a, "当前转写：")
                 + (prefs.getString("asr_mode", "local").equals("local")
                     ? I18n.t(a, "本机离线")
-                    : I18n.t(a, "云端（上传音频）"))
+                    : prefs.getString("asr_mode", "local").equals("sherpa")
+                        ? "sherpa-onnx · SenseVoice"
+                        : I18n.t(a, "云端（上传音频）"))
                 + I18n.t(a, " · 模型")
-                + (OfflineAsr.model(a) == null ? I18n.t(a, "未导入") : I18n.t(a, "已就绪")),
+                + (prefs.getString("asr_mode", "local").equals("sherpa")
+                    ? (SherpaAsr.root(a, false) == null ? I18n.t(a, "未导入") : I18n.t(a, "已就绪"))
+                    : (OfflineAsr.model(a) == null ? I18n.t(a, "未导入") : I18n.t(a, "已就绪"))),
             14,
             0xff547567));
     a.row(
@@ -350,8 +392,17 @@ class FeatureUi {
                 new AlertDialog.Builder(a)
                     .setTitle(I18n.t(a, "选择转写方式"))
                     .setItems(
-                        new String[] {I18n.t(a, "本机离线（不上传音频）"), I18n.t(a, "云端接口（上传音频）")},
+                        new String[] {
+                          I18n.t(a, "本机离线（不上传音频）"),
+                          I18n.t(a, "云端接口（上传音频）"),
+                          "sherpa-onnx · SenseVoice"
+                        },
                         (d, which) -> {
+                          if (which == 2) {
+                            prefs.edit().putString("asr_mode", "sherpa").apply();
+                            a.render();
+                            return;
+                          }
                           if (which == 1 && new Ai(a).deepSeek()) {
                             a.message(
                                 I18n.english(a)
@@ -413,6 +464,83 @@ class FeatureUi {
                           a.render();
                         })
                     .show()));
+    c.addView(
+        a.text(
+            I18n.english(a)
+                ? "SenseVoice: "
+                    + (SherpaAsr.root(a, false) == null ? "not imported" : "ready")
+                    + " · speaker models: "
+                    + (SherpaAsr.root(a, true) == null ? "not imported" : "ready")
+                : "SenseVoice："
+                    + (SherpaAsr.root(a, false) == null ? "未导入" : "已就绪")
+                    + " · 说话人模型："
+                    + (SherpaAsr.root(a, true) == null ? "未导入" : "已就绪"),
+            13,
+            0xff547567));
+    a.row(
+        c,
+        a.button(
+            I18n.english(a) ? "Import SenseVoice ZIP" : "导入SenseVoice ZIP",
+            () ->
+                a.startActivityForResult(
+                    new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        .setType("application/zip")
+                        .addCategory(Intent.CATEGORY_OPENABLE),
+                    41)),
+        a.button(
+            I18n.english(a) ? "Import speaker ZIP" : "导入说话人ZIP",
+            () ->
+                a.startActivityForResult(
+                    new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                        .setType("application/zip")
+                        .addCategory(Intent.CATEGORY_OPENABLE),
+                    42)));
+    CheckBox diar = new CheckBox(a);
+    diar.setText(
+        I18n.english(a) ? "Automatic speaker separation (sherpa only)" : "自动说话人分离（仅sherpa引擎）");
+    diar.setChecked(prefs.getBoolean("diar_enabled", false));
+    diar.setOnCheckedChangeListener((v, on) -> prefs.edit().putBoolean("diar_enabled", on).apply());
+    c.addView(diar);
+    c.addView(
+        a.button(
+            I18n.english(a)
+                ? "Speaker count: "
+                    + (prefs.getInt("speaker_count", -1) < 0
+                        ? "Auto"
+                        : prefs.getInt("speaker_count", -1))
+                : "说话人数："
+                    + (prefs.getInt("speaker_count", -1) < 0
+                        ? "自动"
+                        : prefs.getInt("speaker_count", -1)),
+            () ->
+                new AlertDialog.Builder(a)
+                    .setTitle(I18n.english(a) ? "Known speaker count" : "已知说话人数")
+                    .setItems(
+                        new String[] {
+                          I18n.english(a) ? "Auto (may over-separate)" : "自动（可能过度分离）",
+                          "2",
+                          "3",
+                          "4",
+                          "5",
+                          "6",
+                          "7",
+                          "8"
+                        },
+                        (d, w) -> {
+                          prefs.edit().putInt("speaker_count", w == 0 ? -1 : w + 1).apply();
+                          a.render();
+                        })
+                    .show()));
+
+    c.addView(
+        a.text(
+            I18n.english(a)
+                ? "Speaker numbers apply to this recording only. Long-press a transcript to correct"
+                    + " labels. Import audio up to 10 minutes; boundaries are approximate, not"
+                    + " word-level timing."
+                : "说话人编号仅适用于当前录音，长按转写可纠正标注。支持最多10分钟音频，时间为片段边界，非逐字时间戳。",
+            12,
+            0xff788278));
     CheckBox silence = new CheckBox(a);
     silence.setText(I18n.t(a, "过滤静音片段（实验性，默认保留全部）"));
     silence.setChecked(prefs.getBoolean("discard_silence", false));

@@ -53,7 +53,7 @@ public class UpgradeTest {
     assertFalse(db.find(7).pinned);
     assertEquals(0, db.find(7).metadata().length());
     assertEquals("旧版本回顾", db.summary("2026-10-13"));
-    assertEquals(2, db.getReadableDatabase().getVersion());
+    assertEquals(3, db.getReadableDatabase().getVersion());
   }
 
   @Test

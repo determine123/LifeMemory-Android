@@ -11,6 +11,10 @@ public class SpeechJobs {
 
   public static boolean available(Context c) {
     String mode = c.getSharedPreferences("life", 0).getString("asr_mode", "local");
+    if (mode.equals("sherpa"))
+      return SherpaAsr.root(c, false) != null
+          && (!c.getSharedPreferences("life", 0).getBoolean("diar_enabled", false)
+              || SherpaAsr.root(c, true) != null);
     return mode.equals("local")
         ? OfflineAsr.model(c) != null
         : new Ai(c).enabled()
@@ -24,6 +28,10 @@ public class SpeechJobs {
 
   static String unavailableReason(Context c) {
     boolean en = I18n.english(c);
+    if (c.getSharedPreferences("life", 0).getString("asr_mode", "local").equals("sherpa"))
+      return en
+          ? "Import SenseVoice and, if enabled, speaker models in Settings."
+          : "请在设置中导入SenseVoice模型及已启用的说话人模型。";
     if (c.getSharedPreferences("life", 0).getString("asr_mode", "local").equals("local"))
       return en ? "Import the offline Chinese model in Settings first." : "请先在设置中导入离线中文模型。";
     if (new Ai(c).deepSeek())
@@ -60,7 +68,11 @@ public class SpeechJobs {
             Transcript result =
                 c.getSharedPreferences("life", 0).getString("asr_mode", "local").equals("local")
                     ? OfflineAsr.transcribe(c, new File(e.path))
-                    : new Ai(c).transcribeDetailed(new File(e.path));
+                    : c.getSharedPreferences("life", 0)
+                            .getString("asr_mode", "local")
+                            .equals("sherpa")
+                        ? SherpaAsr.transcribe(c, new File(e.path))
+                        : new Ai(c).transcribeDetailed(new File(e.path));
             db.transcript(id, result);
             if (c.getSharedPreferences("life", 0).getBoolean("recap_after_asr", false)) {
               try {

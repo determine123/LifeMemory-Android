@@ -10,3 +10,7 @@
 - Gradle：Apache-2.0，https://github.com/gradle/gradle
 
 Omi、Memex 与 Auday 为设计参考，实际读取范围及复用边界见 [参考记录](reference-notes/SOURCES.md)。上游源码副本、语音模型、私人记录均不上传此仓库。
+
+## sherpa-onnx and ONNX Runtime
+
+sherpa-onnx 1.13.8 is used through the official Android AAR under Apache-2.0. The AAR SHA-256 is `633c24321e06b1fe79feafa03ea16cbc0f8a286641e2da3559bac91bdb13bd96`. Source: https://github.com/k2-fsa/sherpa-onnx/tree/v1.13.8. Its bundled ONNX Runtime is MIT licensed. License texts are included in `app/src/main/assets/licenses/`. Models are imported separately and retain their own licenses; they are not included in the APK.

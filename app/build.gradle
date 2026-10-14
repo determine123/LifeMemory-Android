@@ -3,11 +3,14 @@ android {
  namespace 'com.lifememory.app'
  compileSdk 35
  buildToolsVersion '35.0.0'
+ packagingOptions { jniLibs { useLegacyPackaging true } }
  bundle { language { enableSplit = false } }
- defaultConfig { applicationId 'com.lifememory.app'; minSdk 26; targetSdk 35; versionCode 9; versionName '0.8.0-alpha02'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
+ defaultConfig { applicationId 'com.lifememory.app'; minSdk 26; targetSdk 35; versionCode 10; versionName '0.8.0-alpha03'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
 }
 dependencies {
+ implementation files('libs/sherpa-onnx-1.13.8.aar')
+ implementation 'org.jetbrains.kotlin:kotlin-stdlib:1.9.20'
  implementation platform('org.jetbrains.kotlin:kotlin-bom:1.9.20')
  implementation 'com.google.mlkit:text-recognition-chinese:16.0.1'
  implementation 'androidx.core:core:1.13.1'

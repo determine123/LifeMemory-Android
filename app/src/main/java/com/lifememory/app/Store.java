@@ -13,7 +13,7 @@ public class Store extends SQLiteOpenHelper {
   }
 
   Store(Context c, String name) {
-    super(c, name, null, 2);
+    super(c, name, null, 3);
   }
 
   public void onCreate(SQLiteDatabase d) {
@@ -23,10 +23,11 @@ public class Store extends SQLiteOpenHelper {
             + " DEFAULT '{}', pinned INTEGER NOT NULL DEFAULT 0)");
     d.execSQL(
         "CREATE TABLE summaries(day TEXT PRIMARY KEY, text TEXT NOT NULL, fingerprint TEXT NOT NULL"
-            + " DEFAULT '', updated INTEGER NOT NULL DEFAULT 0)");
+            + " DEFAULT '', updated INTEGER NOT NULL DEFAULT 0, details TEXT NOT NULL DEFAULT"
+            + " '{}')");
     d.execSQL(
         "CREATE TABLE todos(id INTEGER PRIMARY KEY, day TEXT NOT NULL, text TEXT NOT NULL, done"
-            + " INTEGER NOT NULL DEFAULT 0)");
+            + " INTEGER NOT NULL DEFAULT 0, sources TEXT NOT NULL DEFAULT '[]')");
     d.execSQL("CREATE INDEX events_time ON events(time)");
   }
 
@@ -37,6 +38,10 @@ public class Store extends SQLiteOpenHelper {
       d.execSQL("ALTER TABLE summaries ADD COLUMN fingerprint TEXT NOT NULL DEFAULT ''");
       d.execSQL("ALTER TABLE summaries ADD COLUMN updated INTEGER NOT NULL DEFAULT 0");
       d.execSQL("CREATE INDEX IF NOT EXISTS events_time ON events(time)");
+    }
+    if (old < 3) {
+      d.execSQL("ALTER TABLE summaries ADD COLUMN details TEXT NOT NULL DEFAULT '{}'");
+      d.execSQL("ALTER TABLE todos ADD COLUMN sources TEXT NOT NULL DEFAULT '[]'");
     }
   }
 
@@ -120,6 +125,7 @@ public class Store extends SQLiteOpenHelper {
     ContentValues v = new ContentValues();
     v.put("day", day);
     v.put("text", text);
+    v.put("details", "{}");
     v.put("fingerprint", fingerprint(events(day, null)));
     v.put("updated", System.currentTimeMillis());
     getWritableDatabase()
@@ -159,15 +165,52 @@ public class Store extends SQLiteOpenHelper {
     try (Cursor c =
         getReadableDatabase()
             .rawQuery(
-                "SELECT id,text,done FROM todos WHERE day=? ORDER BY id", new String[] {day})) {
+                "SELECT id,text,done,sources FROM todos WHERE day=? ORDER BY id",
+                new String[] {day})) {
       while (c.moveToNext())
         a.put(
             new JSONObject()
                 .put("id", c.getLong(0))
                 .put("text", c.getString(1))
-                .put("done", c.getInt(2)));
+                .put("done", c.getInt(2))
+                .put("source_ids", new JSONArray(c.getString(3))));
     }
     return a;
+  }
+
+  public JSONObject recapDetails(String day) {
+    try (Cursor cursor =
+        getReadableDatabase()
+            .rawQuery("SELECT details FROM summaries WHERE day=?", new String[] {day})) {
+      if (cursor.moveToFirst()) return new JSONObject(cursor.getString(0));
+    } catch (JSONException ignored) {
+    }
+    return new JSONObject();
+  }
+
+  public void recapDetailed(String day, JSONObject detail) throws JSONException {
+    SQLiteDatabase d = getWritableDatabase();
+    d.beginTransaction();
+    try {
+      JSONArray tasks = detail.optJSONArray("todos"), texts = new JSONArray();
+      if (tasks != null)
+        for (int i = 0; i < tasks.length(); i++)
+          texts.put(tasks.getJSONObject(i).getString("text"));
+      recap(day, detail.getString("summary"), texts);
+      ContentValues v = new ContentValues();
+      v.put("details", detail.toString());
+      d.update("summaries", v, "day=?", new String[] {day});
+      if (tasks != null)
+        for (int i = 0; i < tasks.length(); i++) {
+          JSONObject task = tasks.getJSONObject(i);
+          v = new ContentValues();
+          v.put("sources", task.getJSONArray("source_ids").toString());
+          d.update("todos", v, "day=? AND text=?", new String[] {day, task.getString("text")});
+        }
+      d.setTransactionSuccessful();
+    } finally {
+      d.endTransaction();
+    }
   }
 
   public void toggle(long id, boolean done) {
@@ -240,6 +283,21 @@ public class Store extends SQLiteOpenHelper {
     JSONObject meta = e.metadata();
     meta.remove("asr_error");
     try {
+      JSONArray oldParts = meta.optJSONArray("segments");
+      if (oldParts != null)
+        for (int n = 0; n < result.segments.length(); n++) {
+          JSONObject part = result.segments.getJSONObject(n);
+          for (int j = 0; j < oldParts.length(); j++) {
+            JSONObject old = oldParts.getJSONObject(j);
+            if (old.optBoolean("speaker_manual")
+                && old.optLong("start_ms") == part.optLong("start_ms")
+                && old.optLong("end_ms") == part.optLong("end_ms")
+                && old.optString("text").equals(part.optString("text"))) {
+              part.put("speaker", old.optString("speaker")).put("speaker_manual", true);
+              break;
+            }
+          }
+        }
       meta.put("segments", result.segments)
           .put("asr", result.engine)
           .put(

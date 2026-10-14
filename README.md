@@ -2,7 +2,7 @@
 
 ## Download
 
-[Download LifeMemory v0.7.0 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.7.0/LifeMemory-v0.7.0-debug.apk) · [Release notes](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.7.0)
+[Download LifeMemory v0.8.0-alpha03 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha03/LifeMemory-v0.8.0-alpha03-debug.apk) · [Release notes](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha03)
 
 Android 8.0+. Debug beta build; allow installation from your browser when prompted. Install over the existing version to keep your data. Offline speech models are imported separately.
 
@@ -13,7 +13,7 @@ Android 8.0+. Debug beta build; allow installation from your browser when prompt
 
 ## Language
 
-Version **0.7.0** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition currently uses an imported Chinese Vosk model.
+Version **0.8.0-alpha03** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition supports Vosk Chinese and optional multilingual SenseVoice through sherpa-onnx. [Model setup](SHERPA-MODELS.md).
 
 ## Recording automation and your phone's recorder
 
@@ -33,7 +33,9 @@ Settings now includes a DeepSeek chat preset and a saved-configuration `/models`
 - Timestamped playback, manual speaker labels, seeking and playback speed controls.
 - Text, photos, local Chinese OCR and manually entered location/activity/mood on a dated timeline.
 - Concise daily recaps, separate tasks, source records and evidence-based memory questions. Without AI, show local record statistics.
-- ZIP backup export, configurable audio retention and protection for important recordings.
+- ZIP backup export/import with attachment validation, rollback, record merging and source-ID remapping.
+- Record topics with historical browsing and transcript search; daily events/tasks open their source text or audio.
+- Optional sherpa-onnx SenseVoice and speaker separation in an isolated process. Known speaker count (2–8) or Auto; offline models imported separately.
 
 ## Promotional website — included
 
@@ -45,7 +47,7 @@ Open the HTML file locally or run `python -m http.server 8767 --directory docs`.
 
 Requires JDK **17**, Android SDK Platform **35**, Build Tools **35.0.0**, Gradle **8.9**, and AGP **8.7.3**. Minimum Android: **8.0 / API 26**.
 
-Set `ANDROID_HOME` or an untracked `local.properties` with `sdk.dir`. Open in Android Studio, or run:
+Set `ANDROID_HOME` or an untracked `local.properties` with `sdk.dir`. First run `./fetch-dependencies.ps1` in PowerShell to fetch and verify the pinned sherpa-onnx AAR. Then open in Android Studio, or run:
 
 ```sh
 ./gradlew assembleDebug lintDebug assembleDebugAndroidTest
@@ -57,9 +59,9 @@ Import a ZIP from [Vosk models](https://alphacephei.com/vosk/models) unchanged i
 
 ## Privacy and limits
 
-Records stay in app-private storage. Offline transcription and OCR run locally. Cloud transcription uploads audio; AI recaps/chat send relevant text; optional image analysis sends the selected photo. Keys use Android Keystore encryption. The database has no additional app-level encryption; exported ZIP backups are unencrypted. Backup import is not implemented.
+Records stay in app-private storage. Offline transcription and OCR run locally. Cloud transcription uploads audio; AI recaps/chat send relevant text; optional image analysis sends the selected photo. Keys use Android Keystore encryption. The database has no additional app-level encryption; exported ZIP backups are unencrypted. Backup ZIP import merges records and remaps source links, preserving existing summaries and tasks.
 
-Speaker labels are manual; automatic multi-speaker separation is not validated. No automatic heart-rate, stress or GPS collection. Real-device battery use, noisy-room accuracy, background restrictions and uninterrupted all-day recording need further testing. Scheduled recaps may be delayed by Android power management.
+Speaker labels can be corrected manually. Optional local speaker separation is integrated; Auto can over-separate, and noisy-room accuracy still needs real-device validation. No automatic heart-rate, stress or GPS collection. Real-device battery use, noisy-room accuracy, background restrictions and uninterrupted all-day recording need further testing. Scheduled recaps may be delayed by Android power management.
 
 ## Validation and license
 
@@ -74,3 +76,7 @@ Found a problem? [Open an issue](https://github.com/determine123/LifeMemory-Andr
 Follow [determine on Bilibili](https://space.bilibili.com/1553355526) for project updates and demos.
 
 Douyin: **ltm1524001843** (search this ID in Douyin to follow determine).
+
+## v0.8.0-alpha03 integration
+
+Includes optional local SenseVoice/speaker separation, source-linked daily recaps, topic browsing and backup import. See [model setup](SHERPA-MODELS.md) and [validation report](TESTING-v0.8-alpha03.md). Model ZIPs are not bundled with the APK. Speaker numbers are per recording, not personal identity. Existing recaps can be regenerated to add linked events.

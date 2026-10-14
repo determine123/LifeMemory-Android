@@ -28,7 +28,7 @@ final class AutoCapture {
   }
 
   static boolean startWhenVisible(MainActivity a) {
-    if (a.getIntent().getBooleanExtra("external_audio_flow", false)) return false;
+    if (a.busy || a.getIntent().getBooleanExtra("external_audio_flow", false)) return false;
     if (!armed(a)
         || CaptureService.active
         || a.checkSelfPermission(Manifest.permission.RECORD_AUDIO)

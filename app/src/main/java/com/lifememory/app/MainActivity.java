@@ -190,7 +190,11 @@ public class MainActivity extends Activity {
     b.setTextColor(INK);
     b.setBackground(shape(0xffe7ebe1, 14));
     b.setPadding(dp(10), dp(8), dp(10), dp(8));
-    b.setOnClickListener(v -> click.run());
+    b.setEnabled(!busy);
+    b.setOnClickListener(
+        v -> {
+          if (!busy) click.run();
+        });
     return b;
   }
 
@@ -340,6 +344,7 @@ public class MainActivity extends Activity {
       LinearLayout c = card();
       c.addView(text(I18n.t(MainActivity.this, "我的一天 · 50字概览"), 20, INK));
       c.addView(text(RecapEngine.compact(summary), 15, INK));
+      RecapUi.events(this, c, db.recapDetails(selected));
       c.addView(
           button(
               I18n.t(MainActivity.this, "查看回顾与原始记录"),
@@ -368,11 +373,13 @@ public class MainActivity extends Activity {
         for (int k = 0; k < todos.length(); k++) {
           JSONObject t = todos.getJSONObject(k);
           CheckBox box = new CheckBox(this);
+          box.setEnabled(!busy);
           box.setText(t.getString("text"));
           box.setChecked(t.getInt("done") == 1);
           long id = t.getLong("id");
           box.setOnCheckedChangeListener((b, checked) -> db.toggle(id, checked));
           c.addView(box);
+          RecapUi.sources(this, c, t.optJSONArray("source_ids"));
         }
       }
     } catch (Exception e) {
@@ -396,6 +403,7 @@ public class MainActivity extends Activity {
 
   private void eventCard(Store.Event e) {
     LinearLayout c = card();
+    c.addView(button(I18n.english(this) ? "Topics" : "主题", () -> new FeatureUi(this).topics(e)));
     String time = new SimpleDateFormat("HH:mm", Locale.CHINA).format(new Date(e.time));
     c.addView(
         text(
@@ -575,6 +583,77 @@ public class MainActivity extends Activity {
     super.onActivityResult(r, result, data);
     if ((r == 50 || r == 51) && result == RESULT_OK && data != null && data.getData() != null) {
       importAudio(data.getData());
+      return;
+    }
+    if ((r == 41 || r == 42) && result == RESULT_OK && data != null && data.getData() != null) {
+      final Uri uri = data.getData();
+      final boolean diar = r == 42;
+      busy = true;
+      render();
+      worker.submit(
+          () -> {
+            String message;
+            try {
+              SherpaAsr.install(this, uri, diar);
+              message =
+                  I18n.english(this)
+                      ? "Model imported. Select sherpa-onnx to transcribe."
+                      : "模型已导入，请选择sherpa-onnx引擎转写。";
+            } catch (Exception | LinkageError e) {
+              message = e.getMessage();
+            }
+            final String msg = message;
+            runOnUiThread(
+                () -> {
+                  busy = false;
+                  render();
+                  message(msg);
+                });
+          });
+      return;
+    }
+    if (r == 31 && result == RESULT_OK && data != null && data.getData() != null) {
+      final Uri uri = data.getData();
+      if (CaptureService.active || SpeechJobs.pendingCount() > 0 || busy) {
+        message(
+            I18n.english(this)
+                ? "Stop recording and processing before importing."
+                : "请先停止录音并等待处理完成。");
+        return;
+      }
+      new AlertDialog.Builder(this)
+          .setTitle(I18n.english(this) ? "Merge backup" : "合并备份")
+          .setMessage(
+              I18n.english(this)
+                  ? "Records and attachments will be merged. Existing summaries and matching tasks"
+                      + " are kept. Reimporting the same archive skips its records. Settings and"
+                      + " API keys are not imported."
+                  : "合并记录与附件，保留已有回顾及相同待办。重复导入同一备份会跳过其记录，不导入设置或API密钥。")
+          .setNegativeButton(I18n.t(this, "取消"), null)
+          .setPositiveButton(
+              I18n.t(this, "导入"),
+              (dialog, which) -> {
+                busy = true;
+                render();
+                worker.submit(
+                    () -> {
+                      String msg;
+                      try {
+                        int count = BackupImport.restore(this, uri);
+                        msg = (I18n.english(this) ? "Imported records: " : "已导入记录：") + count;
+                      } catch (Exception e) {
+                        msg = (I18n.english(this) ? "Import failed: " : "导入失败：") + e.getMessage();
+                      }
+                      final String resultMsg = msg;
+                      runOnUiThread(
+                          () -> {
+                            busy = false;
+                            render();
+                            message(resultMsg);
+                          });
+                    });
+              })
+          .show();
       return;
     }
     if (r == 40 && result == RESULT_OK && data != null && data.getData() != null) {
@@ -821,6 +900,33 @@ public class MainActivity extends Activity {
         c,
         button(I18n.t(MainActivity.this, "搜索"), () -> showSearch(q.getText().toString(), results)),
         button(I18n.t(MainActivity.this, "问记忆"), () -> ask(q.getText().toString(), results)));
+    c.addView(
+        button(
+            I18n.english(this) ? "Browse topics" : "按主题回顾",
+            () -> {
+              List<Store.Event> all = db.events(null, null);
+              List<String> topics = Topics.list(all);
+              if (topics.isEmpty()) {
+                message(
+                    I18n.english(this) ? "Add topics to timeline records first." : "请先给时间线记录添加主题。");
+                return;
+              }
+              new AlertDialog.Builder(this)
+                  .setTitle(I18n.english(this) ? "Topics" : "主题")
+                  .setItems(
+                      topics.toArray(new String[0]),
+                      (dialog, index) -> {
+                        results.removeAllViews();
+                        String topic = topics.get(index);
+                        List<Store.Event> matches = Topics.select(topic, all);
+                        results.addView(text(topic + " · " + matches.size(), 18, INK));
+                        for (Store.Event e : matches)
+                          results.addView(
+                              button(
+                                  Store.day(e.time) + " · " + e.text, () -> openMemoryRecord(e)));
+                      })
+                  .show();
+            }));
     body.addView(results);
     row(
         body,
@@ -880,7 +986,7 @@ public class MainActivity extends Activity {
           text(
               I18n.english(this)
                   ? "No matching records. Try a topic, place, activity or date. No records were"
-                        + " sent to AI."
+                      + " sent to AI."
                   : "没有找到匹配记录，请尝试主题、地点、活动或日期。本次未向 AI 发送记录。",
               15,
               INK));
@@ -920,15 +1026,18 @@ public class MainActivity extends Activity {
         });
   }
 
-  private void openMemoryRecord(Store.Event source) {
+  void openMemoryRecord(Store.Event source) {
     Store.Event e = db.find(source.id);
     if (e == null) {
       message(I18n.english(this) ? "This record was deleted." : "这条记录已删除。");
       return;
     }
     selected = Store.day(e.time);
-    if (e.kind.equals("audio")) new FeatureUi(this).transcript(e);
-    else
+    if (e.kind.equals("audio")) {
+      if (e.metadata().optJSONArray("segments") != null) new FeatureUi(this).transcript(e);
+      else if (!e.path.isEmpty()) play(e.path, 0);
+      else message(I18n.english(this) ? "Original audio is unavailable." : "原音频已不存在。");
+    } else
       new AlertDialog.Builder(this)
           .setTitle("#" + e.id + " · " + selected)
           .setMessage(e.text)
@@ -1100,13 +1209,30 @@ public class MainActivity extends Activity {
                           "LifeMemory-" + Store.day(System.currentTimeMillis()) + ".zip");
               startActivityForResult(i, 30);
             }));
+    data.addView(
+        button(
+            I18n.english(this) ? "Import backup ZIP" : "导入备份 ZIP",
+            () -> {
+              if (CaptureService.active || SpeechJobs.pendingCount() > 0 || busy) {
+                message(
+                    I18n.english(this)
+                        ? "Stop recording and wait for processing before importing."
+                        : "请先停止录音并等待处理完成，再导入备份。");
+                return;
+              }
+              startActivityForResult(
+                  new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                      .setType("application/zip")
+                      .addCategory(Intent.CATEGORY_OPENABLE),
+                  31);
+            }));
     LinearLayout about = card();
     about.addView(text(I18n.t(MainActivity.this, "Omi × Memex × Auday · 独立实现"), 18, INK));
     about.addView(
         text(
             I18n.t(
                 MainActivity.this,
-                "参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.4.0\n支持 Android 8.0 及以上。"),
+                "参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.4.0\n支持 Android 8.0 及以上。").replace("0.4.0", "0.8.0-alpha03"),
             14,
             MUTED));
     row(
@@ -1141,20 +1267,27 @@ public class MainActivity extends Activity {
             JSONArray a = new JSONArray();
             Set<String> days = db.allDays();
             for (Store.Event e : all) {
-              a.put(e.json());
+              JSONObject record = e.json();
+              if (!e.path.isEmpty())
+                record.put("media", "media/" + e.id + "-" + new File(e.path).getName());
+              a.put(record);
               days.add(Store.day(e.time));
             }
-            JSONObject summaries = new JSONObject(), todos = new JSONObject();
+            JSONObject summaries = new JSONObject(),
+                todos = new JSONObject(),
+                recaps = new JSONObject();
             for (String d : days) {
               summaries.put(d, db.summary(d));
               todos.put(d, db.todos(d));
+              recaps.put(d, db.recapDetails(d));
             }
             JSONObject archive =
                 new JSONObject()
-                    .put("version", 2)
+                    .put("version", 3)
                     .put("events", a)
                     .put("summaries", summaries)
-                    .put("todos", todos);
+                    .put("todos", todos)
+                    .put("recaps", recaps);
             try (OutputStream out = getContentResolver().openOutputStream(destination);
                 ZipOutputStream z = new ZipOutputStream(out)) {
               zipText(z, "records.json", archive.toString(2));
@@ -1163,7 +1296,7 @@ public class MainActivity extends Activity {
                 if (e.path.isEmpty()) continue;
                 File f = new File(e.path);
                 if (!f.exists()) continue;
-                z.putNextEntry(new ZipEntry("media/" + f.getName()));
+                z.putNextEntry(new ZipEntry("media/" + e.id + "-" + f.getName()));
                 try (InputStream in = new FileInputStream(f)) {
                   copy(in, z);
                 }
