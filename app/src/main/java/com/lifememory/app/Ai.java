@@ -131,7 +131,7 @@ public class Ai {
       throw new IOException(
           I18n.english(ctx)
               ? "This DeepSeek configuration is for chat. Use on-device transcription; its"
-                    + " audio/transcriptions route previously returned 404."
+                  + " audio/transcriptions route previously returned 404."
               : "当前DeepSeek配置用于聊天。请使用本机转写；此前其audio/transcriptions路径实测返回404。");
     HttpURLConnection c = connection("/audio/transcriptions");
     String b = "LifeMemory" + System.nanoTime();
@@ -158,8 +158,18 @@ public class Ai {
                   + "\r\n--"
                   + b
                   + "\r\n"
-                  + "Content-Disposition: form-data; name=\"file\"; filename=\"audio.m4a\"\r\n"
-                  + "Content-Type: audio/mp4\r\n\r\n")
+                  + "Content-Disposition: form-data; name=\"file\"; filename=\""
+                  + audio.getName().replaceAll("[^A-Za-z0-9._-]", "_")
+                  + "\"\r\n"
+                  + "Content-Type: "
+                  + (audio.getName().endsWith(".wav")
+                      ? "audio/wav"
+                      : audio.getName().endsWith(".mp3")
+                          ? "audio/mpeg"
+                          : audio.getName().endsWith(".m4a")
+                              ? "audio/mp4"
+                              : "application/octet-stream")
+                  + "\r\n\r\n")
               .getBytes(StandardCharsets.UTF_8));
       try (InputStream in = new FileInputStream(audio)) {
         MainActivity.copy(in, o);
@@ -222,7 +232,7 @@ public class Ai {
             : (en ? "Selected chat model is not listed; check its name. " : "当前对话模型未在列表中，请检查名称。"))
         + (en
             ? "This checks authentication and the model list only; it does not test billing, chat"
-                  + " generation or audio transcription."
+                + " generation or audio transcription."
             : "此测试仅验证鉴权和模型列表，不验证余额、实际生成或语音转写。");
   }
 }

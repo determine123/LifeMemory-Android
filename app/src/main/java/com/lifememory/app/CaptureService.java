@@ -66,7 +66,13 @@ public class CaptureService extends Service {
   public int onStartCommand(Intent intent, int flags, int id) {
     String action = intent == null ? "start" : intent.getAction();
     if ("stop".equals(action)) {
+      AutoCapture.manualStop(this);
       stopSelf();
+      return START_NOT_STICKY;
+    }
+    if ("auto_config".equals(action) && active && wake != null && !paused) {
+      if (AutoCapture.armed(this)) wake.acquire();
+      else wake.acquire(12 * 60 * 60 * 1000L);
       return START_NOT_STICKY;
     }
     if ("mark".equals(action) && active) {
@@ -86,11 +92,17 @@ public class CaptureService extends Service {
       wake =
           ((PowerManager) getSystemService(POWER_SERVICE))
               .newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "LifeMemory:capture");
-      wake.acquire(12 * 60 * 60 * 1000L);
+      wake.setReferenceCounted(false);
+      if (AutoCapture.armed(this)) wake.acquire();
+      else wake.acquire(12 * 60 * 60 * 1000L);
       begin();
       handler.postDelayed(rotate, segmentMs());
       handler.post(tick);
-      handler.postDelayed(() -> stopSelf(), 12 * 60 * 60 * 1000L);
+      handler.postDelayed(
+          () -> {
+            if (!AutoCapture.armed(this)) stopSelf();
+          },
+          12 * 60 * 60 * 1000L);
       state();
     } catch (Exception e) {
       fail(e);
@@ -210,7 +222,8 @@ public class CaptureService extends Service {
         paused = true;
         if (wake != null && wake.isHeld()) wake.release();
       } else {
-        wake.acquire(12 * 60 * 60 * 1000L);
+        if (AutoCapture.armed(this)) wake.acquire();
+        else wake.acquire(12 * 60 * 60 * 1000L);
         begin();
         paused = false;
         handler.postDelayed(rotate, segmentMs());

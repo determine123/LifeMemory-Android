@@ -6,7 +6,13 @@
 
 ## Language
 
-Version **0.6.0** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition currently uses an imported Chinese Vosk model.
+Version **0.7.0** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition currently uses an imported Chinese Vosk model.
+
+## Recording automation and your phone's recorder
+
+Settings → Automatic recording & imports: opt into resume after reboot/opening the app. Manual Stop disarms auto recording until re-enabled. Android 8–10 attempts boot recording; Android 11+ requires opening the app from the boot notification. Automatic mode has no app-enforced 12-hour cap, but Android or vendor power management may interrupt it.
+
+Use System recorder if the installed recorder supports Android's standard action. Otherwise share an audio file to LifeMemory or use Import audio. Enable Recap automatically after transcription for audio → transcript → local/AI recap → app display. No private recorder data is accessed. See [v0.7 validation and limits](TESTING-v0.7.md).
 
 ## DeepSeek and authentication fixes
 
@@ -50,6 +56,6 @@ Speaker labels are manual; automatic multi-speaker separation is not validated. 
 
 ## Validation and license
 
-Latest report: [v0.6 — 34 device tests](TESTING-v0.6.md). Previous reports: [v0.5](TESTING-v0.5.md), [v0.4](TESTING-v0.4.md), [v0.3](TESTING-v0.3.md). Website checks: `node docs/check.mjs`. Tests use synthetic speech and emulator fixtures, not proof of real-world accuracy.
+Latest report: [v0.7 — 36 device tests](TESTING-v0.7.md). Previous reports: [v0.6](TESTING-v0.6.md), [v0.5](TESTING-v0.5.md), [v0.4](TESTING-v0.4.md), [v0.3](TESTING-v0.3.md). Website checks: `node docs/check.mjs`. Tests use synthetic speech and emulator fixtures, not proof of real-world accuracy.
 
 Original code: [MIT](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) · [Reference scope](reference-notes/SOURCES.md).

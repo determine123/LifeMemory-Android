@@ -103,7 +103,7 @@
 <string name="msg_40de979f" formatted="false">"Records live in app-private storage. Uninstalling deletes local data; export a backup first. Segment length is configurable. Retry transcription from the timeline."</string>
 <string name="msg_a55ddebc" formatted="false">"Export full backup"</string>
 <string name="msg_9af55f71" formatted="false">"Inspired by Omi, Memex and Auday"</string>
-<string name="msg_ed8b78e5" formatted="false">"Inspired by Omi, Memex, Auday and Orca. Version 0.6.0\nAndroid 8.0 and later."</string>
+<string name="msg_ed8b78e5" formatted="false">"Inspired by Omi, Memex, Auday and Orca. Version 0.7.0\nAndroid 8.0 and later."</string>
 <string name="msg_8d0ce986" formatted="false">"Omi source"</string>
 <string name="msg_dd644169" formatted="false">"Memex source"</string>
 <string name="msg_19471c8f" formatted="false">"Enter a valid HTTPS API URL"</string>

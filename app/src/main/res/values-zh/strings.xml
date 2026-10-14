@@ -103,7 +103,7 @@
 <string name="msg_40de979f" formatted="false">"记录存放在应用私有目录。卸载会清除本地数据，请先导出备份。录音按 60 秒分段，可在时间线手动重试转写。"</string>
 <string name="msg_a55ddebc" formatted="false">"导出完整备份"</string>
 <string name="msg_9af55f71" formatted="false">"Omi × Memex × Auday · 独立实现"</string>
-<string name="msg_ed8b78e5" formatted="false">"参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.6.0\n支持 Android 8.0 及以上。"</string>
+<string name="msg_ed8b78e5" formatted="false">"参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.7.0\n支持 Android 8.0 及以上。"</string>
 <string name="msg_8d0ce986" formatted="false">"Omi 源码"</string>
 <string name="msg_dd644169" formatted="false">"Memex 源码"</string>
 <string name="msg_19471c8f" formatted="false">"请输入有效的 HTTPS API 地址"</string>

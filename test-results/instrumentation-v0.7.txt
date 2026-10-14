@@ -1,0 +1,19 @@
+
+com.lifememory.app.ApiConfigTest:...
+com.lifememory.app.AutomationTest:..
+com.lifememory.app.I18nTest:..
+com.lifememory.app.MemorySearchTest:...
+com.lifememory.app.OcrTest:.
+com.lifememory.app.OfflineSpeechIntegrationTest:.
+com.lifememory.app.PhotosTest:..
+com.lifememory.app.PlaybackUiTest:..
+com.lifememory.app.ProcessingCenterTest:.
+com.lifememory.app.RecapTest:..
+com.lifememory.app.StoreTest:......
+com.lifememory.app.UpgradeTest:...........
+
+Time: 36.111
+
+OK (36 tests)
+
+

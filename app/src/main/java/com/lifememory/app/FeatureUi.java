@@ -276,13 +276,58 @@ class FeatureUi {
 
   void settings() {
     android.content.SharedPreferences prefs = a.getSharedPreferences("life", 0);
+    LinearLayout automation = a.card();
+    automation.addView(
+        a.text(I18n.english(a) ? "Automatic recording & imports" : "自动记录与录音机接入", 21, 0xff263d34));
+    CheckBox auto = new CheckBox(a);
+    auto.setText(
+        I18n.english(a) ? "Resume recording after reboot / opening the app" : "重启或打开应用后恢复录音");
+    auto.setChecked(AutoCapture.armed(a));
+    auto.setOnCheckedChangeListener(
+        (v, enabled) -> {
+          if (!enabled) {
+            AutoCapture.enable(a, false);
+            return;
+          }
+          new AlertDialog.Builder(a)
+              .setTitle(I18n.english(a) ? "Enable automatic recording?" : "启用自动记录？")
+              .setMessage(
+                  I18n.english(a)
+                      ? "Audio recording will resume when the app is visible. Android 11+ uses a"
+                            + " boot notification. Manual Stop disarms this setting. Grant"
+                            + " microphone/notification permissions using Start recording first."
+                      : "应用可见时恢复录音；Android 11及以上开机通过通知恢复。手动停止会取消自动恢复。请先使用开始记录授予麦克风和通知权限。")
+              .setPositiveButton(
+                  I18n.english(a) ? "Enable" : "启用",
+                  (d, w) -> {
+                    AutoCapture.enable(a, true);
+                    AutoCapture.startWhenVisible(a);
+                  })
+              .setNegativeButton(
+                  I18n.english(a) ? "Cancel" : "取消", (d, w) -> auto.setChecked(false))
+              .show();
+        });
+    automation.addView(auto);
+    CheckBox summarize = new CheckBox(a);
+    summarize.setText(
+        I18n.english(a)
+            ? "Recap automatically after transcription (AI sends text)"
+            : "转写完成后自动回顾（AI发送文字）");
+    summarize.setChecked(prefs.getBoolean("recap_after_asr", false));
+    summarize.setOnCheckedChangeListener(
+        (v, enabled) -> prefs.edit().putBoolean("recap_after_asr", enabled).apply());
+    automation.addView(summarize);
+    a.row(
+        automation,
+        a.button(I18n.english(a) ? "System recorder" : "系统录音机", a::systemRecorder),
+        a.button(I18n.english(a) ? "Import audio" : "导入音频", a::chooseAudio));
     LinearLayout c = a.card();
     if (prefs.getBoolean("asr_blocked", false))
       c.addView(
           a.text(
               I18n.english(a)
                   ? "Cloud queue paused after an authentication/access failure. Correct and save"
-                        + " API settings before retrying. On-device transcription is unaffected."
+                      + " API settings before retrying. On-device transcription is unaffected."
                   : "云端队列因鉴权或权限失败暂停。请修正并保存API配置后重试；本机转写不受影响。",
               14,
               0xff985e42));
@@ -311,7 +356,7 @@ class FeatureUi {
                             a.message(
                                 I18n.english(a)
                                     ? "Use on-device transcription with this DeepSeek chat"
-                                          + " configuration. Import the Chinese model first."
+                                        + " configuration. Import the Chinese model first."
                                     : "当前DeepSeek聊天配置请配合本机转写，先导入中文模型。");
                             return;
                           }

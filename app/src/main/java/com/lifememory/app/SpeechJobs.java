@@ -29,12 +29,12 @@ public class SpeechJobs {
     if (new Ai(c).deepSeek())
       return en
           ? "This DeepSeek configuration is for chat. Select on-device transcription and import the"
-                + " Chinese model."
+              + " Chinese model."
           : "当前DeepSeek配置用于聊天，请选择本机转写并导入中文模型。";
     if (c.getSharedPreferences("life", 0).getBoolean("asr_blocked", false))
       return en
           ? "Cloud queue paused after authentication failure. Correct and save the API settings,"
-                + " test authentication, then retry."
+              + " test authentication, then retry."
           : "云端队列因鉴权失败暂停。请修正并保存API设置，测试鉴权后再重试。";
     return en
         ? "Configure this speech provider’s API URL, model and key in Settings."
@@ -62,6 +62,17 @@ public class SpeechJobs {
                     ? OfflineAsr.transcribe(c, new File(e.path))
                     : new Ai(c).transcribeDetailed(new File(e.path));
             db.transcript(id, result);
+            if (c.getSharedPreferences("life", 0).getBoolean("recap_after_asr", false)) {
+              try {
+                RecapEngine.generate(c, Store.day(e.time));
+                c.getSharedPreferences("life", 0).edit().remove("recap_error").apply();
+              } catch (Exception recapError) {
+                c.getSharedPreferences("life", 0)
+                    .edit()
+                    .putString("recap_error", recapError.getMessage())
+                    .apply();
+              }
+            }
           } catch (Exception | LinkageError error) {
             if (error instanceof ApiFailure
                 && (((ApiFailure) error).status == 401 || ((ApiFailure) error).status == 403))

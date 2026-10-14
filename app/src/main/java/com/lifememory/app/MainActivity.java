@@ -109,6 +109,12 @@ public class MainActivity extends Activity {
     }
   }
 
+  @Override
+  public void onWindowFocusChanged(boolean focused) {
+    super.onWindowFocusChanged(focused);
+    if (focused) AutoCapture.startWhenVisible(this);
+  }
+
   protected void onDestroy() {
     statusHandler.removeCallbacksAndMessages(null);
     unregisterReceiver(receiver);
@@ -142,6 +148,10 @@ public class MainActivity extends Activity {
     } else if (i.getType() != null && i.getType().startsWith("image/")) {
       Uri u = i.getParcelableExtra(Intent.EXTRA_STREAM);
       if (u != null) importPhoto(u);
+    } else if (i.getType() != null && i.getType().startsWith("audio/")) {
+      i.putExtra("external_audio_flow", true);
+      Uri u = i.getParcelableExtra(Intent.EXTRA_STREAM);
+      if (u != null) importAudio(u);
     }
     i.setAction(null);
   }
@@ -499,6 +509,7 @@ public class MainActivity extends Activity {
 
   private void capture() {
     if (CaptureService.active) {
+      AutoCapture.manualStop(this);
       stopService(new Intent(this, CaptureService.class));
       return;
     }
@@ -562,6 +573,10 @@ public class MainActivity extends Activity {
 
   protected void onActivityResult(int r, int result, Intent data) {
     super.onActivityResult(r, result, data);
+    if ((r == 50 || r == 51) && result == RESULT_OK && data != null && data.getData() != null) {
+      importAudio(data.getData());
+      return;
+    }
     if (r == 40 && result == RESULT_OK && data != null && data.getData() != null) {
       new FeatureUi(this).install(data.getData());
       return;
@@ -576,6 +591,55 @@ public class MainActivity extends Activity {
     }
     if (r == 30 && result == RESULT_OK && data != null && data.getData() != null)
       export(data.getData());
+  }
+
+  void importAudio(Uri uri) {
+    worker.submit(
+        () -> {
+          try {
+            AudioImport.save(this, uri);
+            runOnUiThread(
+                () -> {
+                  render();
+                  message(
+                      I18n.english(this)
+                          ? "Audio imported. It will transcribe when a model/provider is"
+                              + " configured."
+                          : "音频已导入，配置模型或服务后可转写。");
+                });
+          } catch (Exception error) {
+            runOnUiThread(() -> message(error.getMessage()));
+          }
+        });
+  }
+
+  void chooseAudio() {
+    getIntent().putExtra("external_audio_flow", true);
+    startActivityForResult(
+        new Intent(Intent.ACTION_OPEN_DOCUMENT)
+            .setType("audio/*")
+            .addCategory(Intent.CATEGORY_OPENABLE),
+        50);
+  }
+
+  void systemRecorder() {
+    getIntent().putExtra("external_audio_flow", true);
+    if (CaptureService.active) {
+      message(
+          I18n.english(this)
+              ? "Stop LifeMemory recording before using another recorder."
+              : "请先停止拾光录音，再使用其他录音机。");
+      return;
+    }
+    try {
+      startActivityForResult(new Intent(MediaStore.Audio.Media.RECORD_SOUND_ACTION), 51);
+    } catch (ActivityNotFoundException e) {
+      message(
+          I18n.english(this)
+              ? "No compatible system recorder. Record in your recorder app and share/export the"
+                  + " audio to LifeMemory."
+              : "未找到兼容的系统录音入口。可在录音机中录音，再分享或导出音频到拾光。");
+    }
   }
 
   private void importPhoto(Uri uri) {
@@ -895,7 +959,7 @@ public class MainActivity extends Activity {
               message(
                   I18n.english(this)
                       ? "DeepSeek chat configured; transcription set to on-device. Enter this"
-                            + " provider’s key and save. Import the Chinese model if needed."
+                          + " provider’s key and save. Import the Chinese model if needed."
                       : "已配置DeepSeek聊天，转写设为本机。请填写该服务商的密钥并保存；本机转写需导入中文模型。");
               render();
             }),
@@ -924,7 +988,7 @@ public class MainActivity extends Activity {
         text(
             I18n.english(this)
                 ? "The test sends your key to the saved provider’s /models endpoint; no personal"
-                      + " records or audio are sent. Save edits before testing."
+                    + " records or audio are sent. Save edits before testing."
                 : "测试仅向已保存的服务商/models接口发送密钥，不发送私人记录或录音。修改后先保存再测试。",
             12,
             MUTED));
