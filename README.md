@@ -2,7 +2,7 @@
 
 ## Download
 
-[Download LifeMemory v0.8.0-alpha03 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha03/LifeMemory-v0.8.0-alpha03-debug.apk) · [Release notes](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha03)
+[Download LifeMemory v0.8.0-alpha04 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha04/LifeMemory-v0.8.0-alpha04-debug.apk) · [Release notes](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha04)
 
 Android 8.0+. Debug beta build; allow installation from your browser when prompted. Install over the existing version to keep your data. Offline speech models are imported separately.
 
@@ -13,7 +13,7 @@ Android 8.0+. Debug beta build; allow installation from your browser when prompt
 
 ## Language
 
-Version **0.8.0-alpha03** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition supports Vosk Chinese and optional multilingual SenseVoice through sherpa-onnx. [Model setup](SHERPA-MODELS.md).
+Version **0.8.0-alpha04** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition supports Vosk Chinese and optional multilingual SenseVoice through sherpa-onnx. [Model setup](SHERPA-MODELS.md).
 
 ## Recording automation and your phone's recorder
 
@@ -77,6 +77,10 @@ Follow [determine on Bilibili](https://space.bilibili.com/1553355526) for projec
 
 Douyin: **ltm1524001843** (search this ID in Douyin to follow determine).
 
-## v0.8.0-alpha03 integration
+## v0.8.0-alpha04 integration
 
 Includes optional local SenseVoice/speaker separation, source-linked daily recaps, topic browsing and backup import. See [model setup](SHERPA-MODELS.md) and [validation report](TESTING-v0.8-alpha03.md). Model ZIPs are not bundled with the APK. Speaker numbers are per recording, not personal identity. Existing recaps can be regenerated to add linked events.
+
+## Four-period timeline
+
+The homepage shows Morning (00–11), Midday (11–14), Afternoon (14–18) and Evening (18–24), each with a recap of up to 50 Unicode characters. Raw minute recordings are kept inside period details. Automatic recaps run after each period ends; Android may delay background work. Update one period or all four manually. Without AI, show record counts rather than fabricated semantic summaries. Derived period caches can be regenerated after backup restore; original records and tasks remain backed up. See [validation](TESTING-v0.8-alpha04.md).

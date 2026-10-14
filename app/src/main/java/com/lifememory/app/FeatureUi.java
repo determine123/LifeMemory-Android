@@ -549,13 +549,14 @@ class FeatureUi {
     c.addView(silence);
     c.addView(a.text(I18n.t(a, "静音过滤使用简单音量阈值，安静或远处的讲话可能被误判；重要录音请保持关闭。"), 12, 0xff788278));
     LinearLayout recap = a.card();
-    recap.addView(a.text(I18n.t(a, "晚间每日回顾"), 21, 0xff263d34));
+    recap.addView(a.text(I18n.english(a) ? "Four daily recaps" : "每天四次回顾", 21, 0xff263d34));
     CheckBox automatic = new CheckBox(a);
-    automatic.setText(I18n.t(a, "自动整理并通知我"));
-    automatic.setChecked(prefs.getBoolean("daily_enabled", false));
+    automatic.setText(
+        I18n.english(a) ? "Automatically organize each finished period" : "时段结束后自动整理");
+    automatic.setChecked(prefs.getBoolean("period_enabled", true));
     automatic.setOnCheckedChangeListener(
         (v, on) -> {
-          prefs.edit().putBoolean("daily_enabled", on).apply();
+          prefs.edit().putBoolean("period_enabled", on).apply();
           RecapWorker.schedule(a, true);
           if (on
               && Build.VERSION.SDK_INT >= 33
@@ -564,28 +565,16 @@ class FeatureUi {
             a.requestPermissions(new String[] {android.Manifest.permission.POST_NOTIFICATIONS}, 11);
         });
     recap.addView(automatic);
-    String time =
-        String.format(
-            Locale.US,
-            "%02d:%02d",
-            prefs.getInt("recap_hour", 22),
-            prefs.getInt("recap_minute", 0));
+    recap.addView(
+        a.text(
+            I18n.english(a)
+                ? "Morning 00–11 · Midday 11–14 · Afternoon 14–18 · Evening 18–24. Android may"
+                      + " delay background summaries."
+                : "早上00–11 · 中午11–14 · 下午14–18 · 晚上18–24。系统可能延迟后台整理。",
+            13,
+            0xff788278));
     a.row(
         recap,
-        a.button(
-            I18n.t(a, "回顾时间 ") + time,
-            () ->
-                new TimePickerDialog(
-                        a,
-                        (picker, h, m) -> {
-                          prefs.edit().putInt("recap_hour", h).putInt("recap_minute", m).apply();
-                          RecapWorker.schedule(a, true);
-                          a.render();
-                        },
-                        prefs.getInt("recap_hour", 22),
-                        prefs.getInt("recap_minute", 0),
-                        true)
-                    .show()),
         a.button(
             I18n.t(a, "回顾风格"),
             () ->

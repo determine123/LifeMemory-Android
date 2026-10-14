@@ -339,66 +339,8 @@ public class MainActivity extends Activity {
         button(I18n.t(MainActivity.this, "整理这一天"), this::summarize));
     new FeatureUi(this).recording(hero);
     if (busy) body.addView(text(I18n.t(MainActivity.this, "正在处理，请稍候…"), 14, GREEN));
-    String summary = db.summary(selected);
-    if (!summary.isEmpty()) {
-      LinearLayout c = card();
-      c.addView(text(I18n.t(MainActivity.this, "我的一天 · 50字概览"), 20, INK));
-      c.addView(text(RecapEngine.compact(summary), 15, INK));
-      RecapUi.events(this, c, db.recapDetails(selected));
-      c.addView(
-          button(
-              I18n.t(MainActivity.this, "查看回顾与原始记录"),
-              () ->
-                  new AlertDialog.Builder(this)
-                      .setTitle(I18n.t(MainActivity.this, "回顾依据 · ") + selected)
-                      .setMessage(
-                          summary
-                              + I18n.t(MainActivity.this, "\n\n原始记录（最多300条）\n")
-                              + RecapEngine.evidence(db.events(selected, null), 300))
-                      .setPositiveButton(I18n.t(MainActivity.this, "关闭"), null)
-                      .show()));
-      c.addView(
-          text(
-              db.summaryStale(selected)
-                  ? I18n.t(MainActivity.this, "有新增或修改的记录，回顾待更新。")
-                  : I18n.t(MainActivity.this, "回顾已覆盖当前记录。"),
-              12,
-              MUTED));
-    }
-    try {
-      JSONArray todos = db.todos(selected);
-      if (todos.length() > 0) {
-        LinearLayout c = card();
-        c.addView(text(I18n.t(MainActivity.this, "待办清单"), 18, INK));
-        for (int k = 0; k < todos.length(); k++) {
-          JSONObject t = todos.getJSONObject(k);
-          CheckBox box = new CheckBox(this);
-          box.setEnabled(!busy);
-          box.setText(t.getString("text"));
-          box.setChecked(t.getInt("done") == 1);
-          long id = t.getLong("id");
-          box.setOnCheckedChangeListener((b, checked) -> db.toggle(id, checked));
-          c.addView(box);
-          RecapUi.sources(this, c, t.optJSONArray("source_ids"));
-        }
-      }
-    } catch (Exception e) {
-      message(e.getMessage());
-    }
-    List<Store.Event> events = db.events(selected, null);
-    body.addView(
-        text(
-            I18n.t(MainActivity.this, "时间线  /  ")
-                + events.size()
-                + I18n.t(MainActivity.this, " 条记录"),
-            15,
-            MUTED));
-    if (events.isEmpty()) {
-      LinearLayout c = card();
-      c.addView(text(I18n.t(MainActivity.this, "今天的故事，从这里开始"), 20, INK));
-      c.addView(text(I18n.t(MainActivity.this, "写下一个念头，拍一张照片，或开始录音。你的记录会保存在这台手机上。"), 15, MUTED));
-    }
-    for (Store.Event e : events) eventCard(e);
+    DayPeriodUi.render(this, selected, db.events(selected, null));
+    DayPeriodUi.tasks(this);
   }
 
   private void eventCard(Store.Event e) {
@@ -487,7 +429,7 @@ public class MainActivity extends Activity {
         .show();
   }
 
-  private void edit(Store.Event e) {
+  void edit(Store.Event e) {
     EditText t = editor(I18n.t(MainActivity.this, "记录内容"), e.text);
     new AlertDialog.Builder(this)
         .setTitle(I18n.t(MainActivity.this, "编辑记录"))
@@ -872,7 +814,7 @@ public class MainActivity extends Activity {
     worker.submit(
         () -> {
           try {
-            RecapEngine.generate(this, day);
+            DayPeriods.all(this, day, true);
             runOnUiThread(
                 () -> {
                   busy = false;
@@ -1231,8 +1173,9 @@ public class MainActivity extends Activity {
     about.addView(
         text(
             I18n.t(
-                MainActivity.this,
-                "参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.4.0\n支持 Android 8.0 及以上。").replace("0.4.0", "0.8.0-alpha03"),
+                    MainActivity.this,
+                    "参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.4.0\n支持 Android 8.0 及以上。")
+                .replace("0.4.0", "0.8.0-alpha04"),
             14,
             MUTED));
     row(

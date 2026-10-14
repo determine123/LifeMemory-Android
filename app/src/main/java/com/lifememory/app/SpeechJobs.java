@@ -76,7 +76,7 @@ public class SpeechJobs {
             db.transcript(id, result);
             if (c.getSharedPreferences("life", 0).getBoolean("recap_after_asr", false)) {
               try {
-                RecapEngine.generate(c, Store.day(e.time));
+                if (pending.size() == 1) DayPeriods.closed(c, Store.day(e.time));
                 c.getSharedPreferences("life", 0).edit().remove("recap_error").apply();
               } catch (Exception recapError) {
                 c.getSharedPreferences("life", 0)

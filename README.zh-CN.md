@@ -1,8 +1,8 @@
-# 拾光 · LifeMemory v0.8.0-alpha03
+# 拾光 · LifeMemory v0.8.0-alpha04
 
 ## 下载新版
 
-[下载 LifeMemory v0.8.0-alpha03 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha03/LifeMemory-v0.8.0-alpha03-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha03)
+[下载 LifeMemory v0.8.0-alpha04 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha04/LifeMemory-v0.8.0-alpha04-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha04)
 
 适用于 Android 8.0 及以上，调试测试版。按提示允许浏览器安装；覆盖安装可保留原有数据，离线语音模型需另行导入。
 
@@ -23,7 +23,7 @@ App默认使用英文，不跟随系统语言自动切换；顶部语言按钮�
 
 ## 安装
 
-本地构建包为 `dist/LifeMemory-v0.8.0-alpha03-debug.apk`，未提交至源码仓库。可以覆盖旧版升级；不要先卸载，以免清除本地数据。自行构建见下方说明。
+本地构建包为 `dist/LifeMemory-v0.8.0-alpha04-debug.apk`，未提交至源码仓库。可以覆盖旧版升级；不要先卸载，以免清除本地数据。自行构建见下方说明。
 
 ## v0.4 处理中心与宣传网页
 
@@ -96,7 +96,7 @@ Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、�
 
 抖音号：**ltm1524001843**，在抖音搜索该账号即可关注 determine。
 
-## v0.8.0-alpha03 三阶段集成
+## v0.8.0-alpha04 三阶段集成
 
 - 可选sherpa-onnx SenseVoice转写及说话人分离，独立进程运行；支持自动估计或指定2–8人，长按片段手动纠正。
 - 五十字回顾下展示带来源的事件，待办可打开原始文字或回听音频；旧回顾重新生成后可获得链接。
@@ -104,3 +104,7 @@ Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、�
 - 合并导入v2/v3备份，重映射来源链接，重复导入同一份备份跳过记录；文件校验或数据错误时回滚，保留现有日记。
 
 模型不包含在APK中，需要另行导入，见[模型配置](SHERPA-MODELS.md)。自动分离可能过度区分说话人，不代表真实身份识别。测试与限制见[新版报告](TESTING-v0.8-alpha03.md)。构建前运行 `./fetch-dependencies.ps1` 获取并校验语音运行库。
+
+## 四时段时间线
+
+首页按早上00–11、中午11–14、下午14–18、晚上18–24展示四张回顾卡，每段概览最多50字。原始分钟录音保留在时段详情，可查看转写、回听和编辑。默认在时段结束后自动整理，安卓可能延迟执行；也可手动整理一段或全天四段。未配置AI时显示记录概况，不编造内容。时段缓存可在恢复备份后重新生成，原始记录和待办仍参与备份。[验证报告](TESTING-v0.8-alpha04.md)。

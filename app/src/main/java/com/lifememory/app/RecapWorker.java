@@ -4,7 +4,6 @@ import android.app.*;
 import android.content.*;
 import androidx.work.*;
 import java.time.*;
-import java.util.concurrent.TimeUnit;
 
 public class RecapWorker extends Worker {
   public RecapWorker(Context c, WorkerParameters p) {
@@ -22,23 +21,8 @@ public class RecapWorker extends Worker {
   }
 
   public static void schedule(Context c, boolean replace) {
-    android.content.SharedPreferences p = c.getSharedPreferences("life", 0);
-    WorkManager w = WorkManager.getInstance(c);
-    if (!p.getBoolean("daily_enabled", false)) {
-      w.cancelUniqueWork("daily-recap");
-      return;
-    }
-    long delay =
-        delay(LocalDateTime.now(), p.getInt("recap_hour", 22), p.getInt("recap_minute", 0));
-    PeriodicWorkRequest request =
-        new PeriodicWorkRequest.Builder(RecapWorker.class, 1, TimeUnit.DAYS)
-            .setInitialDelay(delay, TimeUnit.MILLISECONDS)
-            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
-            .build();
-    w.enqueueUniquePeriodicWork(
-        "daily-recap",
-        replace ? ExistingPeriodicWorkPolicy.CANCEL_AND_REENQUEUE : ExistingPeriodicWorkPolicy.KEEP,
-        request);
+    WorkManager.getInstance(c).cancelUniqueWork("daily-recap");
+    DayPeriodWorker.schedule(c, replace);
   }
 
   @Override
