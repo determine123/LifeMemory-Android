@@ -1,6 +1,9 @@
 import {readFileSync} from 'node:fs';
 import assert from 'node:assert/strict';
-const html=readFileSync(new URL('./index.html',import.meta.url),'utf8');
+for (const [file, language, switchTo] of [['index.html','en','zh.html'],['zh.html','zh-CN','index.html']]) {
+const html=readFileSync(new URL('./'+file,import.meta.url),'utf8');
+assert.ok(html.includes(`lang="${language}"`));
+assert.ok(html.includes(`href="${switchTo}"`));
 const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
 assert.equal(ids.length,new Set(ids).size,'Duplicate HTML IDs');
 for(const m of html.matchAll(/href="#([^"]+)"/g))assert.ok(ids.includes(m[1]),`Missing anchor ${m[1]}`);
@@ -12,4 +15,5 @@ buttons[1].listeners.click();
 assert.equal(panels.process.hidden,false);assert.equal(panels.capture.hidden,true);
 buttons[1].listeners.keydown({key:'ArrowRight',preventDefault(){}});
 assert.equal(panels.review.hidden,false);assert.equal(buttons[2].focused,true);
-console.log('PASS: anchors, unique IDs, tab switching and keyboard navigation');
+console.log(`PASS ${file}: language, switch link, anchors, unique IDs, tabs and keyboard navigation`);
+}
