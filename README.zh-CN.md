@@ -6,7 +6,7 @@
 
 本地优先的安卓生活记录：声音、照片和文字，整理为可追溯的简短回顾。
 
-[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha05/LifeMemory-v0.8.0-alpha05-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
+[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha06/LifeMemory-v0.8.0-alpha06-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
 
 Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
@@ -22,7 +22,7 @@ Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
 ## 三步开始
 
-1. 下载 **v0.8.0-alpha05 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
+1. 下载 **v0.8.0-alpha06 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
 2. 录音、添加照片或文字。离线转写需[单独导入模型](SHERPA-MODELS.md)，APK 不包含模型。
 3. 配置自己的 AI 服务生成语义回顾。DeepSeek 用于对话和总结，对话密钥不代表支持音频转写；参见[配置排查](TROUBLESHOOTING.md)。
 
@@ -40,7 +40,7 @@ Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
 ## 验证状态
 
-当前版本 **9 项相关模拟器测试通过**，覆盖时段回顾、语言与回听；构建与 lint 通过，参见[最新验证报告](TESTING-v0.8-alpha05.md)。上一版 alpha04 全套 61 项测试通过。小米 13 Ultra USB 真机、真实噪声准确率、耗电与厂商后台限制仍待验证，不保证全天无间断录音。
+当前版本 **15 项相关模拟器测试通过**，覆盖记忆检索与时段回顾；构建与 lint 通过，参见[最新验证报告](TESTING-v0.8-alpha06.md)。上一版 alpha04 全套 61 项测试通过。小米 13 Ultra USB 真机、真实噪声准确率、耗电与厂商后台限制仍待验证，不保证全天无间断录音。
 
 ## 构建与宣传网页
 
@@ -66,3 +66,7 @@ APK 位于 `app/build/outputs/apk/debug/app-debug.apk`。不要提交密钥或�
 原生 Java 独立实现。生活记录流程参考 Omi、Memex、Auday，处理进度参考 Orca；本次项目介绍参考 [Tether](https://github.com/tt-11-dd/tether-ai) 的产品说明结构和本地/云端选择表述。无关联关系，不包含其编程 Agent 功能。
 
 [MIT](LICENSE) · [第三方声明](THIRD_PARTY_NOTICES.md) · [参考范围](reference-notes/SOURCES.md)
+
+## 相关项目与检索筛选
+
+[项目筛选与落地说明](reference-notes/PROJECTS-2026-10-14.md)。搜索支持 `type:audio`、`topic:工作`、`pinned:true`、`period:evening`、具体日期与“昨天晚上”等时段表达。

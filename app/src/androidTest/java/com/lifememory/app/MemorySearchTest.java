@@ -100,4 +100,21 @@ public class MemorySearchTest {
                 LocalDate.of(2026, 10, 13))
             .isEmpty());
   }
+
+  @Test public void explicitDateDoesNotBecomeKeywordDigits() {
+    assertEquals(1, MemorySearch.select("2026-10-12", Arrays.asList(event(1, "2026-10-12", "meeting")), LocalDate.of(2026,10,13)).size());
+  }
+  @Test public void datedPeriodFiltersUseLocalTimeBoundaries() {
+    long t = LocalDate.of(2026,10,12).atTime(18,0).atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    List<Store.Event> all = Arrays.asList(event(1,"2026-10-12","meeting"), new Store.Event(2,t,"audio","meeting","","ready"));
+    assertEquals(2,MemorySearch.select("yesterday evening",all,LocalDate.of(2026,10,13)).get(0).id);
+    assertEquals(1,MemorySearch.select("昨天晚上",all,LocalDate.of(2026,10,13)).size());
+    assertEquals(2,MemorySearch.select("period:evening type:audio",all,LocalDate.of(2026,10,13)).get(0).id);
+  }
+  @Test public void exactTopicsAndPinnedFiltersCombine() {
+    Store.Event e = new Store.Event(3, event(1,"2026-10-12","").time,"audio","review","","ready","{\"topics\":[\"Work\"]}",true);
+    assertEquals(1,MemorySearch.select("topic:work pinned:true type:audio",Arrays.asList(e),LocalDate.of(2026,10,13)).size());
+    assertTrue(MemorySearch.select("topic:workshop",Arrays.asList(e),LocalDate.of(2026,10,13)).isEmpty());
+    assertTrue(MemorySearch.select("pinned:false",Arrays.asList(e),LocalDate.of(2026,10,13)).isEmpty());
+  }
 }

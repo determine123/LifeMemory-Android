@@ -852,6 +852,9 @@ public class MainActivity extends Activity {
     c.addView(text(I18n.t(MainActivity.this, "关键词搜索所有日期的记录。AI 回答附原始记录编号。"), 14, MUTED));
     EditText q = editor(I18n.t(MainActivity.this, "例如：项目讨论 / 午餐 / 昨天"), "");
     c.addView(q);
+    c.addView(text(I18n.english(this)
+        ? "Filters: type:audio topic:work pinned:true period:evening. Try yesterday evening."
+        : "筛选：type:audio topic:工作 pinned:true period:evening；也可搜索昨天晚上。", 12, MUTED));
     LinearLayout results = column();
     row(
         c,

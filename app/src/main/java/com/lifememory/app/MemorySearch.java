@@ -8,6 +8,33 @@ import java.util.regex.*;
 public class MemorySearch {
   public static List<Store.Event> select(String query, List<Store.Event> all, LocalDate today) {
     String q = query.toLowerCase(Locale.ROOT);
+    String kind = null, topic = null;
+    Integer period = null;
+    Boolean pinned = null;
+    Matcher filters = Pattern.compile("(?<!\\S)(type|topic|period|pinned):([^\\s]+)").matcher(q);
+    StringBuffer remainder = new StringBuffer();
+    while (filters.find()) {
+      String key = filters.group(1), value = filters.group(2);
+      boolean valid = true;
+      if (key.equals("type") && Arrays.asList("audio", "photo", "text", "context").contains(value)) kind = value;
+      else if (key.equals("topic")) topic = value;
+      else if (key.equals("pinned") && Arrays.asList("true", "false").contains(value)) pinned = Boolean.valueOf(value);
+      else if (key.equals("period") && Arrays.asList("morning", "midday", "afternoon", "evening").contains(value))
+        period = Arrays.asList("morning", "midday", "afternoon", "evening").indexOf(value);
+      else valid = false;
+      filters.appendReplacement(remainder, valid ? " " : Matcher.quoteReplacement(filters.group()));
+    }
+    filters.appendTail(remainder);
+    q = remainder.toString();
+    // Natural period wording is a time filter only when paired with a date.
+    if (Pattern.compile("今天|昨天|前天|上周|本周|这周|20\\d{2}-\\d{2}-\\d{2}|\\b(today|yesterday|last week|this week)\\b").matcher(q).find()) {
+      String[] words = {"早上|上午|\\bmorning\\b", "中午|\\bmidday\\b", "下午|\\bafternoon\\b", "晚上|\\bevening\\b"};
+      for (int i = 0; i < words.length; i++) {
+        Matcher m = Pattern.compile(words[i]).matcher(q);
+        if (m.find()) { period = i; q = m.replaceAll(" "); break; }
+      }
+    }
+    boolean filtered = kind != null || topic != null || pinned != null || period != null;
     query =
         q.replaceAll("\\bday before yesterday\\b", "前天")
             .replaceAll("\\byesterday\\b", "昨天")
@@ -40,7 +67,7 @@ public class MemorySearch {
     for (String stop :
         new String[] {
           "前天", "昨天", "今天", "上周", "本周", "这周", "的时候", "告诉我", "什么", "哪些", "发生", "做了", "干了", "请问",
-          "记录", "回忆", "20"
+          "记录", "回忆"
         }) cleaned = cleaned.replace(stop, " ");
     cleaned = cleaned.replaceAll("20\\d{2}-\\d{2}-\\d{2}", " ");
     cleaned =
@@ -55,13 +82,23 @@ public class MemorySearch {
       String term = chinese.group();
       for (int i = 0; i + 1 < term.length(); i++) tokens.add(term.substring(i, i + 2));
     }
-    if (tokens.isEmpty() && start == null) return new ArrayList<>();
+    if (tokens.isEmpty() && start == null && !filtered) return new ArrayList<>();
     List<Store.Event> scoped = new ArrayList<>();
     Map<Long, Integer> scores = new HashMap<>();
     for (Store.Event e : all) {
       String day = Store.day(e.time);
       if (start != null
           && (day.compareTo(start.toString()) < 0 || day.compareTo(end.toString()) > 0)) continue;
+      if (kind != null && !kind.equals(e.kind)) continue;
+      if (pinned != null && pinned.booleanValue() != e.pinned) continue;
+      if (period != null && DayPeriods.index(java.time.Instant.ofEpochMilli(e.time).atZone(java.time.ZoneId.systemDefault()).getHour()) != period) continue;
+      if (topic != null) {
+        org.json.JSONArray tags = e.metadata().optJSONArray("topics");
+        boolean matches = false;
+        if (tags != null) for (int n = 0; n < tags.length(); n++)
+          if (topic.equalsIgnoreCase(tags.optString(n))) matches = true;
+        if (!matches) continue;
+      }
       int score = 0;
       org.json.JSONObject meta = e.metadata();
       String text =
