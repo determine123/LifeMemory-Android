@@ -1,0 +1,15 @@
+
+com.lifememory.app.MemorySearchTest:...
+com.lifememory.app.OcrTest:.
+com.lifememory.app.OfflineSpeechIntegrationTest:.
+com.lifememory.app.PhotosTest:..
+com.lifememory.app.PlaybackUiTest:..
+com.lifememory.app.RecapTest:..
+com.lifememory.app.StoreTest:......
+com.lifememory.app.UpgradeTest:...........
+
+Time: 42.27
+
+OK (28 tests)
+
+
