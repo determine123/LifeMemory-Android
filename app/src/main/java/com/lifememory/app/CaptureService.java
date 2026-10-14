@@ -2,9 +2,10 @@ package com.lifememory.app;
 
 import android.app.*;
 import android.content.*;
-import android.media.MediaRecorder;
+import android.media.*;
 import android.os.*;
 import java.io.*;
+import java.util.List;
 import org.json.*;
 
 public class CaptureService extends Service {
@@ -13,6 +14,7 @@ public class CaptureService extends Service {
   private MediaRecorder recorder;
   private File file;
   private long started;
+  private boolean stopping;
   private int peak;
   private Store db;
   private PowerManager.WakeLock wake;
@@ -20,7 +22,12 @@ public class CaptureService extends Service {
   private final Runnable rotate =
       new Runnable() {
         public void run() {
-          finishSegment();
+          try {
+            finishSegment();
+          } catch (Exception e) {
+            fail(e);
+            return;
+          }
           if (active && !paused) {
             try {
               begin();
@@ -35,6 +42,14 @@ public class CaptureService extends Service {
       new Runnable() {
         public void run() {
           if (!active) return;
+          if (recorder != null && !RecordingSafety.enoughSpace(getFilesDir().getUsableSpace())) {
+            fail(
+                new IOException(
+                    I18n.english(CaptureService.this)
+                        ? "Storage is low. Recording stopped; saved segments retained."
+                        : "存储空间不足，录音已停止，已保存片段仍保留。"));
+            return;
+          }
           if (recorder != null)
             try {
               peak = Math.max(peak, recorder.getMaxAmplitude());
@@ -85,6 +100,10 @@ public class CaptureService extends Service {
     }
     if (active) return START_NOT_STICKY;
     try {
+      RecordingSafety.recover(this);
+      if (!getSharedPreferences("capture", 0).getString("current_file", "").isEmpty())
+        throw new IOException("Previous recording recovery is pending");
+      stopping = false;
       sessionStarted = System.currentTimeMillis();
       paused = false;
       active = true;
@@ -146,24 +165,69 @@ public class CaptureService extends Service {
 
   private void begin() throws Exception {
     File dir = new File(getFilesDir(), "media");
-    dir.mkdirs();
+    if (!dir.isDirectory() && !dir.mkdirs())
+      throw new IOException("Cannot create recording directory");
+    if (!RecordingSafety.enoughSpace(dir.getUsableSpace()))
+      throw new IOException(
+          I18n.english(this)
+              ? "At least 16 MB of free storage is required for recording."
+              : "录音需要至少16 MB可用存储空间。");
     started = System.currentTimeMillis();
     peak = 0;
     file = new File(dir, "audio-" + started + ".m4a");
+    RecordingSafety.checkpoint(this, file, started);
     recorder = new MediaRecorder();
+    recorder.setOnErrorListener(
+        (r, what, extra) ->
+            handler.post(
+                () -> {
+                  if (r == recorder && !stopping)
+                    fail(
+                        new IOException(
+                            I18n.english(this)
+                                ? "Microphone recording was interrupted. Check saved audio before"
+                                      + " resuming."
+                                : "麦克风录音已中断，请检查保存的录音后再继续。"));
+                }));
+    recorder.setOnInfoListener(
+        (r, what, extra) -> {
+          if (what == MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED)
+            handler.post(
+                () -> {
+                  if (r == recorder && !stopping)
+                    fail(new IOException("Recording file size limit reached"));
+                });
+        });
     recorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
     recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
     recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
     recorder.setAudioSamplingRate(16000);
     recorder.setAudioEncodingBitRate(32000);
+    recorder.setMaxFileSize(
+        Math.min(8L * 1024 * 1024, dir.getUsableSpace() - RecordingSafety.RESERVE_BYTES));
     recorder.setOutputFile(file.getAbsolutePath());
     recorder.prepare();
     recorder.start();
-    getSharedPreferences("capture", 0)
-        .edit()
-        .putString("current_file", file.getAbsolutePath())
-        .putLong("current_start", started)
-        .apply();
+    if (Build.VERSION.SDK_INT >= 29) {
+      final MediaRecorder current = recorder;
+      recorder.registerAudioRecordingCallback(
+          getMainExecutor(),
+          new AudioManager.AudioRecordingCallback() {
+            @Override
+            public void onRecordingConfigChanged(List<AudioRecordingConfiguration> configs) {
+              if (current != recorder || stopping) return;
+              AudioRecordingConfiguration config = current.getActiveRecordingConfiguration();
+              if (config != null && config.isClientSilenced()) {
+                fail(
+                    new IOException(
+                        I18n.english(CaptureService.this)
+                            ? "Microphone access was interrupted by a call or another app."
+                                  + " Recording stopped; resume manually when available."
+                            : "通话或其他应用中断了麦克风访问，录音已停止，请在麦克风可用后手动继续。"));
+              }
+            }
+          });
+    }
   }
 
   private void finishSegment() {
@@ -174,11 +238,18 @@ public class CaptureService extends Service {
     } catch (Exception e) {
       ok = false;
     } finally {
-      recorder.release();
+      try {
+        recorder.release();
+      } catch (Exception ignored) {
+      }
       recorder = null;
     }
     if (!ok) {
-      file.delete();
+      try {
+        RecordingSafety.recover(this, db, file.getAbsolutePath(), started);
+      } catch (Exception e) {
+        throw new IllegalStateException("Unable to preserve interrupted recording", e);
+      }
       clearCurrent();
       return;
     }
@@ -207,11 +278,7 @@ public class CaptureService extends Service {
   }
 
   private void clearCurrent() {
-    getSharedPreferences("capture", 0)
-        .edit()
-        .remove("current_file")
-        .remove("current_start")
-        .apply();
+    RecordingSafety.clear(this);
   }
 
   private void togglePause() {
@@ -262,6 +329,9 @@ public class CaptureService extends Service {
   }
 
   private void fail(Exception e) {
+    if (stopping) return;
+    stopping = true;
+    handler.removeCallbacksAndMessages(null);
     getSharedPreferences("capture", 0)
         .edit()
         .putString("error", e.getMessage() == null ? e.toString() : e.getMessage())
@@ -271,38 +341,24 @@ public class CaptureService extends Service {
   }
 
   public static void recover(Context c) {
-    if (active) return;
-    android.content.SharedPreferences p = c.getSharedPreferences("capture", 0);
-    String path = p.getString("current_file", "");
-    if (!path.isEmpty())
-      try (Store db = new Store(c)) {
-        File f = new File(path);
-        File dir = new File(c.getFilesDir(), "media");
-        if (f.getCanonicalPath().startsWith(dir.getCanonicalPath() + File.separator)
-            && f.isFile()
-            && f.length() > 0
-            && db.anchor(p.getLong("current_start", 0)) == null) {
-          long id =
-              db.add(
-                  p.getLong("current_start", f.lastModified()),
-                  "audio",
-                  "录音曾中断 · 已找回原文件，可尝试回听或转写",
-                  path,
-                  "pending");
-          db.metadata(id, new JSONObject().put("interrupted", true));
-        }
-      } catch (Exception ignored) {
-      }
-    p.edit().putString("state", "stopped").remove("current_file").remove("current_start").apply();
+    RecordingSafety.recover(c);
   }
 
   public void onDestroy() {
     handler.removeCallbacksAndMessages(null);
     active = false;
     paused = false;
-    finishSegment();
+    try {
+      finishSegment();
+    } catch (Exception e) {
+      getSharedPreferences("capture", 0)
+          .edit()
+          .putString("error", "Unable to save recording; original checkpoint retained")
+          .apply();
+    }
     if (wake != null && wake.isHeld()) wake.release();
     state();
+    db.close();
     stopForeground(STOP_FOREGROUND_REMOVE);
     super.onDestroy();
   }
