@@ -467,7 +467,7 @@ public class MainActivity extends Activity {
     }
     new AlertDialog.Builder(this)
         .setTitle("开始记录今天")
-        .setMessage("应用会显示持续通知，每分钟保存一段录音，最长连续运行 12 小时。请让周围的人知道你正在录音。配置 AI 后，录音会发送至你设置的服务进行转写。")
+        .setMessage("应用会显示持续通知，按设置的间隔分段保存，单次最长12小时。请让周围的人知道你正在录音。默认本机转写；只有主动启用云端转写才上传音频。")
         .setNegativeButton("取消", null)
         .setPositiveButton(
             "开始", (d, w) -> startForegroundService(new Intent(this, CaptureService.class)))
@@ -843,7 +843,9 @@ public class MainActivity extends Activity {
             }));
     LinearLayout about = card();
     about.addView(text("Omi × Memex × Auday · 独立实现", 18, INK));
-    about.addView(text("参考 Omi 的语音记忆和 Memex 的本地多模态时间线。当前版本：0.2.0\n支持 Android 8.0 及以上。", 14, MUTED));
+    about.addView(
+        text(
+            "参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.4.0\n支持 Android 8.0 及以上。", 14, MUTED));
     row(
         about,
         button(

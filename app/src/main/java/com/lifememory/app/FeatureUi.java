@@ -51,6 +51,7 @@ class FeatureUi {
               int count = SpeechJobs.retry(a);
               a.message("已加入转写队列：" + count + " 条");
             }));
+    a.body.addView(a.button("处理中心 · 查看进度与失败记录", () -> ProcessingCenter.show(a)));
   }
 
   void updateStatus(TextView label) {
