@@ -93,3 +93,5 @@ Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、�
 遇到问题欢迎[提交 Issue](https://github.com/determine123/LifeMemory-Android/issues) 或[提交 PR](https://github.com/determine123/LifeMemory-Android/pulls)，也可以邮件联系开发者：[determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn)。
 
 欢迎关注 [B 站主页](https://space.bilibili.com/1553355526)，了解项目进展与使用演示。
+
+抖音号：**ltm1524001843**，在抖音搜索该账号即可关注 determine。

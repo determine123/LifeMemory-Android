@@ -72,3 +72,5 @@ Original code: [MIT](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) · 
 Found a problem? [Open an issue](https://github.com/determine123/LifeMemory-Android/issues) or [contribute a pull request](https://github.com/determine123/LifeMemory-Android/pulls). You can also contact the developer at [determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn).
 
 Follow [determine on Bilibili](https://space.bilibili.com/1553355526) for project updates and demos.
+
+Douyin: **ltm1524001843** (search this ID in Douyin to follow determine).
