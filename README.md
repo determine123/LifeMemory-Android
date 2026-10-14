@@ -40,7 +40,7 @@ Records and offline models stay in app-private storage. Cloud transcription send
 
 ## Validation
 
-**61 emulator instrumentation tests passed** for v0.8.0-alpha05; lint: 0 errors, 16 warnings. [Read the validation report](TESTING-v0.8-alpha04.md). Xiaomi 13 Ultra USB tests, real-world speech accuracy, battery use and vendor background behavior remain pending. Test results do not guarantee uninterrupted all-day recording.
+**9 targeted emulator tests passed** for v0.8.0-alpha05 (period recaps, languages and playback); build and lint passed. [Latest validation](TESTING-v0.8-alpha05.md). The previous alpha04 full suite passed 61 tests. Xiaomi 13 Ultra USB tests, real-world speech accuracy, battery use and vendor background behavior remain pending. Test results do not guarantee uninterrupted all-day recording.
 
 ## Build and website
 
