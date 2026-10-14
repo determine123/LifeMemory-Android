@@ -87,3 +87,9 @@ Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、�
 ```
 
 具体来源见 [SOURCES.md](reference-notes/SOURCES.md)。这是开发测试版 APK，未进行应用商店发布或正式签名验收。
+
+## 联系与交流
+
+遇到问题欢迎[提交 Issue](https://github.com/determine123/LifeMemory-Android/issues) 或[提交 PR](https://github.com/determine123/LifeMemory-Android/pulls)，也可以邮件联系开发者：[determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn)。
+
+欢迎关注 [B 站主页](https://space.bilibili.com/1553355526)，了解项目进展与使用演示。

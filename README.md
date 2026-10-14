@@ -66,3 +66,9 @@ Speaker labels are manual; automatic multi-speaker separation is not validated. 
 Latest report: [v0.7 — 36 device tests](TESTING-v0.7.md). Previous reports: [v0.6](TESTING-v0.6.md), [v0.5](TESTING-v0.5.md), [v0.4](TESTING-v0.4.md), [v0.3](TESTING-v0.3.md). Website checks: `node docs/check.mjs`. Tests use synthetic speech and emulator fixtures, not proof of real-world accuracy.
 
 Original code: [MIT](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) · [Reference scope](reference-notes/SOURCES.md).
+
+## Contact and community
+
+Found a problem? [Open an issue](https://github.com/determine123/LifeMemory-Android/issues) or [contribute a pull request](https://github.com/determine123/LifeMemory-Android/pulls). You can also contact the developer at [determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn).
+
+Follow [determine on Bilibili](https://space.bilibili.com/1553355526) for project updates and demos.
