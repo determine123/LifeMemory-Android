@@ -1,0 +1,242 @@
+<resources>
+<string name="app_name">LifeMemory</string>
+<string name="msg_348c7d70" formatted="false">"Recording could not start: "</string>
+<string name="msg_db08e8dd" formatted="false">"Your day, remembered"</string>
+<string name="msg_c2b907aa" formatted="false">"Find the thread in your memories"</string>
+<string name="msg_9bdcf9c0" formatted="false">"Keep a little of your day"</string>
+<string name="msg_019167c1" formatted="false">"Timeline"</string>
+<string name="msg_00114a16" formatted="false">"Memory"</string>
+<string name="msg_00116b70" formatted="false">"Settings"</string>
+<string name="msg_28bb3e31" formatted="false">"Today"</string>
+<string name="msg_8cacf13c" formatted="false">"Ⅱ Paused — resume when ready"</string>
+<string name="msg_24fc92ff" formatted="false">"● Recording your day"</string>
+<string name="msg_f625f46a" formatted="false">"Everyday moments are worth keeping"</string>
+<string name="msg_2f1d208c" formatted="false">"Audio, photos and notes on your timeline."</string>
+<string name="msg_262be6ab" formatted="false">"Stop recording"</string>
+<string name="msg_2c919db0" formatted="false">"Start recording"</string>
+<string name="msg_013c3c6d" formatted="false">"Write a note"</string>
+<string name="msg_022adf89" formatted="false">"Choose photo"</string>
+<string name="msg_000c683a" formatted="false">"Take photo"</string>
+<string name="msg_cc8c1a70" formatted="false">"Recap this day"</string>
+<string name="msg_d8693da8" formatted="false">"Processing, please wait…"</string>
+<string name="msg_a629f9d5" formatted="false">"My day · 50-character recap"</string>
+<string name="msg_2eed8fd9" formatted="false">"Recap and source records"</string>
+<string name="msg_fe48c3f8" formatted="false">"Sources · "</string>
+<string name="msg_e2def1c0" formatted="false">"\n\nSource records (up to 300)\n"</string>
+<string name="msg_000a72da" formatted="false">"Close"</string>
+<string name="msg_2ec506ce" formatted="false">"Records have changed. Update your recap."</string>
+<string name="msg_357c5e81" formatted="false">"Recap is up to date."</string>
+<string name="msg_2caf7f69" formatted="false">"Tasks"</string>
+<string name="msg_5f60794e" formatted="false">"Timeline / "</string>
+<string name="msg_01a3e8a6" formatted="false">" records"</string>
+<string name="msg_593f1e8b" formatted="false">"Start your story here"</string>
+<string name="msg_1559c12d" formatted="false">"Write a thought, take a photo or record audio. Your records stay on this device."</string>
+<string name="msg_000b5d03" formatted="false">"Audio"</string>
+<string name="msg_000e2dc0" formatted="false">"Photo"</string>
+<string name="msg_4457d759" formatted="false">"Highlights"</string>
+<string name="msg_a548deea" formatted="false">"Context"</string>
+<string name="msg_000ca6b0" formatted="false">"Note"</string>
+<string name="msg_422e3abe" formatted="false">" · Pending"</string>
+<string name="msg_42e10117" formatted="false">" · Transcribing"</string>
+<string name="msg_e5157f0c" formatted="false">" · Audio expired"</string>
+<string name="msg_23981f5e" formatted="false">"AI image analysis"</string>
+<string name="msg_000c9631" formatted="false">"Play"</string>
+<string name="msg_0011afad" formatted="false">"Transcribe"</string>
+<string name="msg_000ff33b" formatted="false">"Edit"</string>
+<string name="msg_01420e59" formatted="false">"Add task"</string>
+<string name="msg_000a8844" formatted="false">"Delete"</string>
+<string name="msg_197e38ae" formatted="false">"Delete this record?"</string>
+<string name="msg_923407ce" formatted="false">"The record and its attachments will be deleted from this device. Regenerate the recap afterwards."</string>
+<string name="msg_000a9472" formatted="false">"Cancel"</string>
+<string name="msg_3ff85ed6" formatted="false">"What is happening now?"</string>
+<string name="msg_0d4952e0" formatted="false">"Write a note · Capture this moment"</string>
+<string name="msg_000a071b" formatted="false">"Save"</string>
+<string name="msg_40efaf39" formatted="false">"Record content"</string>
+<string name="msg_3bf15a20" formatted="false">"Edit record"</string>
+<string name="msg_4eaad54f" formatted="false">"Start recording your day"</string>
+<string name="msg_c3aa2a79" formatted="false">"A persistent notification stays visible. Audio is saved in segments, with sessions up to 12 hours. Let others know you are recording. Transcription is local by default; audio is uploaded only when you enable cloud transcription."</string>
+<string name="msg_000bdacb" formatted="false">"Start"</string>
+<string name="msg_eec629ff" formatted="false">"Microphone permission is required to record."</string>
+<string name="msg_6c3c2816" formatted="false">"Unable to open camera: "</string>
+<string name="msg_1642d2b0" formatted="false">"Unable to read photo"</string>
+<string name="msg_036b1423" formatted="false">"Photo · Recognizing text"</string>
+<string name="msg_8a7644df" formatted="false">"Photo · No recognizable text found"</string>
+<string name="msg_01136c56" formatted="false">"Recognition incomplete; edit manually: "</string>
+<string name="msg_0c906094" formatted="false">"Photo import failed: "</string>
+<string name="msg_a3f71538" formatted="false">"Import an offline Chinese model in Settings, or enable and configure cloud transcription."</string>
+<string name="msg_89b19ec7" formatted="false">"Configure an AI provider and vision model first."</string>
+<string name="msg_d64efa84" formatted="false">"Analyze this photo"</string>
+<string name="msg_95dc3cfe" formatted="false">"This photo will be sent to your configured AI provider. OCR alone does not upload it."</string>
+<string name="msg_000a564a" formatted="false">"Analyze"</string>
+<string name="msg_1340a756" formatted="false">"\n\nImage analysis:\n"</string>
+<string name="msg_45e7d343" formatted="false">"[Record #"</string>
+<string name="msg_a875e5df" formatted="false">"No records for this day yet."</string>
+<string name="msg_18affbb7" formatted="false">"Ask your past self"</string>
+<string name="msg_ba668726" formatted="false">"Search records across dates. AI answers cite source record IDs."</string>
+<string name="msg_10897ee3" formatted="false">"Try: project discussion / lunch / yesterday"</string>
+<string name="msg_000c9c86" formatted="false">"Search"</string>
+<string name="msg_02441c84" formatted="false">"Ask memory"</string>
+<string name="msg_2f920927" formatted="false">"New task"</string>
+<string name="msg_32b12c4e" formatted="false">"What is the next step?"</string>
+<string name="msg_333eaab5" formatted="false">"Add to "</string>
+<string name="msg_000da405" formatted="false">"Add"</string>
+<string name="msg_016e4d77" formatted="false">"Added"</string>
+<string name="msg_ae6f3719" formatted="false">"Enter a keyword."</string>
+<string name="msg_017baeee" formatted="false">"Found "</string>
+<string name="msg_68c4f029" formatted="false">"Searching your memories…"</string>
+<string name="msg_02464bf0" formatted="false">"Question: "</string>
+<string name="msg_41a85fc7" formatted="false">"\nEvidence:\n"</string>
+<string name="msg_03c26c2c" formatted="false">"AI provider"</string>
+<string name="msg_f3b72884" formatted="false">"Photo OCR and offline transcription run on-device. Cloud transcription uploads audio; AI recaps and chat send relevant text. API keys are encrypted with Android Keystore."</string>
+<string name="msg_20cdce86" formatted="false">"API URL (include /v1)"</string>
+<string name="msg_23363f4c" formatted="false">"Key saved; leave blank to keep it"</string>
+<string name="msg_2be92f8e" formatted="false">"Chat model"</string>
+<string name="msg_41e2e9b0" formatted="false">"Speech model"</string>
+<string name="msg_40b3458d" formatted="false">"Vision model"</string>
+<string name="msg_1c53439a" formatted="false">"OpenAI-compatible HTTPS endpoint"</string>
+<string name="msg_1641003c" formatted="false">"Vision model (must support images)"</string>
+<string name="msg_25b617cb" formatted="false">"Save settings"</string>
+<string name="msg_9cca24d2" formatted="false">"Enter a model name"</string>
+<string name="msg_016ab08d" formatted="false">"Saved"</string>
+<string name="msg_bfebe72e" formatted="false">"Disable AI"</string>
+<string name="msg_f8d8b28e" formatted="false">"Your data, your choices"</string>
+<string name="msg_40de979f" formatted="false">"Records live in app-private storage. Uninstalling deletes local data; export a backup first. Segment length is configurable. Retry transcription from the timeline."</string>
+<string name="msg_a55ddebc" formatted="false">"Export full backup"</string>
+<string name="msg_9af55f71" formatted="false">"Inspired by Omi, Memex and Auday"</string>
+<string name="msg_ed8b78e5" formatted="false">"Inspired by Omi, Memex, Auday and Orca. Version 0.5.0\nAndroid 8.0 and later."</string>
+<string name="msg_8d0ce986" formatted="false">"Omi source"</string>
+<string name="msg_dd644169" formatted="false">"Memex source"</string>
+<string name="msg_19471c8f" formatted="false">"Enter a valid HTTPS API URL"</string>
+<string name="msg_85546e80" formatted="false">"Backup exported with records and media attachments."</string>
+<string name="msg_36de9948" formatted="false">"Export failed: "</string>
+<string name="msg_01d3db38" formatted="false">"OK"</string>
+<string name="msg_3b985ea4" formatted="false">"Resume recording"</string>
+<string name="msg_2fd2bed8" formatted="false">"Pause recording"</string>
+<string name="msg_316379a0" formatted="false">"Mark moment"</string>
+<string name="msg_4a47473b" formatted="false">"Recording is paused. Resume before marking a moment."</string>
+<string name="msg_40f2c7bc" formatted="false">"Add context"</string>
+<string name="msg_017841f2" formatted="false">"Pending"</string>
+<string name="msg_13f536e5" formatted="false">"Import an offline model in Settings, or select and configure cloud transcription."</string>
+<string name="msg_c0561d9e" formatted="false">"Added to transcription queue: "</string>
+<string name="msg_00006b41" formatted="false">" records"</string>
+<string name="msg_691865e5" formatted="false">"Processing · Progress and errors"</string>
+<string name="msg_b6fd3566" formatted="false">"Paused · Microphone off"</string>
+<string name="msg_51c5f3de" formatted="false">"Recording · Microphone on"</string>
+<string name="msg_016acff8" formatted="false">"Stopped"</string>
+<string name="msg_2b6aa5d4" formatted="false">"No segments yet"</string>
+<string name="msg_ee0bd5f4" formatted="false">"Last saved "</string>
+<string name="msg_41f64d74" formatted="false">" · Session "</string>
+<string name="msg_0fbd1bb2" formatted="false">" · Queue "</string>
+<string name="msg_225c19f9" formatted="false">"★ Highlight · Original audio protected"</string>
+<string name="msg_0190daf7" formatted="false">"Duration "</string>
+<string name="msg_018d9af4" formatted="false">"Not analyzed"</string>
+<string name="msg_0194f457" formatted="false">"Not transcribed"</string>
+<string name="msg_bcff9172" formatted="false">" · Original audio not retained"</string>
+<string name="msg_5b3f5c4f" formatted="false">"Unmark highlight"</string>
+<string name="msg_9bfad272" formatted="false">"Keep as highlight"</string>
+<string name="msg_0b5afeb4" formatted="false">"Transcript &amp; playback"</string>
+<string name="msg_28c620e5" formatted="false">"Replay moment"</string>
+<string name="msg_2e08c2c5" formatted="false">"The linked recording is not saved yet or no longer exists."</string>
+<string name="msg_dce799a0" formatted="false">"No timestamped transcript yet. Use an offline model or a cloud service supporting verbose_json / diarized_json."</string>
+<string name="msg_9a032161" formatted="false">"Transcript · Tap to play / Hold to label"</string>
+<string name="msg_ef3511a5" formatted="false">"For example: Me / Colleague (manual label)"</string>
+<string name="msg_b0001bda" formatted="false">"Label this segment’s speaker"</string>
+<string name="msg_000ad90e" formatted="false">"Replay"</string>
+<string name="msg_28c5f217" formatted="false">"Replay highlight"</string>
+<string name="msg_dc208d82" formatted="false">"Waiting for the linked segment to be saved."</string>
+<string name="msg_e1231589" formatted="false">"Mark moments while recording, or protect existing recordings as highlights."</string>
+<string name="msg_1b290942" formatted="false">" · Highlights"</string>
+<string name="msg_3f7c3a56" formatted="false">"Place (for example, laboratory)"</string>
+<string name="msg_465d211b" formatted="false">"Activity (for example, project discussion)"</string>
+<string name="msg_4babac92" formatted="false">"Mood / state (self-reported)"</string>
+<string name="msg_f6f6e5a2" formatted="false">"Add context to this moment"</string>
+<string name="msg_0155f0b1" formatted="false">"Place: "</string>
+<string name="msg_01a50bed" formatted="false">"Activity: "</string>
+<string name="msg_67fd6715" formatted="false">"Self-reported state: "</string>
+<string name="msg_7b026f62" formatted="false">"Speech &amp; recording"</string>
+<string name="msg_66d93173" formatted="false">"Transcription: "</string>
+<string name="msg_3078f672" formatted="false">"On-device"</string>
+<string name="msg_30cdc3ab" formatted="false">"Cloud (uploads audio)"</string>
+<string name="msg_0223c9b3" formatted="false">" · Model"</string>
+<string name="msg_018eb993" formatted="false">"Not imported"</string>
+<string name="msg_016c524b" formatted="false">"Ready"</string>
+<string name="msg_427128e3" formatted="false">"Transcription mode"</string>
+<string name="msg_7d78fce3" formatted="false">"Choose transcription mode"</string>
+<string name="msg_1a4f461e" formatted="false">"On-device (no audio upload)"</string>
+<string name="msg_001c8289" formatted="false">"Cloud API (uploads audio)"</string>
+<string name="msg_3fcf9904" formatted="false">"Enable cloud transcription"</string>
+<string name="msg_3333080e" formatted="false">"Future recordings will be sent to your configured speech provider. Recaps and chat alone do not upload original audio."</string>
+<string name="msg_000aa6d9" formatted="false">"Enable"</string>
+<string name="msg_ab43bd57" formatted="false">"Import offline model"</string>
+<string name="msg_1cc650c9" formatted="false">"Download the small Vosk Chinese model ZIP (about 42 MB). Import the ZIP unchanged to transcribe offline."</string>
+<string name="msg_859a6783" formatted="false">"Get Chinese model"</string>
+<string name="msg_2d9aa62d" formatted="false">"Audio segments"</string>
+<string name="msg_da0bcaaf" formatted="false">"Segment length (longer segments may reduce gaps)"</string>
+<string name="msg_002141a8" formatted="false">"1 minute"</string>
+<string name="msg_00222a66" formatted="false">"3 minutes"</string>
+<string name="msg_00231324" formatted="false">"5 minutes"</string>
+<string name="msg_4d626ecb" formatted="false">"Filter silent segments (experimental; off by default)"</string>
+<string name="msg_f4dc6230" formatted="false">"Silence filtering uses a simple volume threshold and may discard quiet or distant speech. Keep it off for important recordings."</string>
+<string name="msg_1b8b69b0" formatted="false">"Evening recap"</string>
+<string name="msg_910159c0" formatted="false">"Generate a recap and notify me"</string>
+<string name="msg_0f004fc2" formatted="false">"Recap time "</string>
+<string name="msg_29cc2e8e" formatted="false">"Recap style"</string>
+<string name="msg_33a170b8" formatted="false">"Warm journal"</string>
+<string name="msg_2be3c3c2" formatted="false">"Work review"</string>
+<string name="msg_39c6e3b4" formatted="false">"Concise facts"</string>
+<string name="msg_c976f046" formatted="false">"Recaps have up to 50 characters. Tasks stay separate; source records can be opened. Without AI, local statistics are shown. AI sends relevant text and context. Background scheduling may be delayed."</string>
+<string name="msg_34e4ad9d" formatted="false">"Latest recap failed: "</string>
+<string name="msg_5db40894" formatted="false">"Original audio &amp; storage"</string>
+<string name="msg_a117d128" formatted="false">"Saved audio: %.1f MB"</string>
+<string name="msg_41f66f7b" formatted="false">" · Retain "</string>
+<string name="msg_000d690d" formatted="false">"Forever"</string>
+<string name="msg_00005d09" formatted="false">" days"</string>
+<string name="msg_26135d2d" formatted="false">"Retention period"</string>
+<string name="msg_5dd6405b" formatted="false">"Expired audio is deleted; text and highlights remain"</string>
+<string name="msg_32617ae9" formatted="false">"Keep forever"</string>
+<string name="msg_00012b80" formatted="false">"7 days"</string>
+<string name="msg_00184026" formatted="false">"30 days"</string>
+<string name="msg_001afa60" formatted="false">"90 days"</string>
+<string name="msg_63892f57" formatted="false">"Clean up expired audio"</string>
+<string name="msg_417fd632" formatted="false">"Audio is currently kept forever. Choose a retention period first."</string>
+<string name="msg_01ab0d9f" formatted="false">"Delete audio older than "</string>
+<string name="msg_1f09d1b5" formatted="false">" days?"</string>
+<string name="msg_37f18c2e" formatted="false">"Protected audio will remain. Expired recordings without transcripts will also be deleted. Export a backup first."</string>
+<string name="msg_000dc6a1" formatted="false">"Clean up"</string>
+<string name="msg_2c5f926d" formatted="false">"Deleted "</string>
+<string name="msg_40f78a7e" formatted="false">" audio files. Text is retained."</string>
+<string name="msg_f2914a6c" formatted="false">"Expired audio is cleaned up daily after you select a retention period. Text, protected audio and audio linked to highlights remain. Back up before manual cleanup."</string>
+<string name="msg_75aebaec" formatted="false">"Offline model ready. Recordings will be transcribed on-device."</string>
+<string name="msg_bfa112b3" formatted="false">"Model import failed: "</string>
+<string name="msg_3ce42a9d" formatted="false">"Original audio was not saved or has been cleaned up."</string>
+<string name="msg_000cba1a" formatted="false">"Pause"</string>
+<string name="msg_3b98d197" formatted="false">"Resume playback"</string>
+<string name="msg_275bc9ff" formatted="false">"Original audio"</string>
+<string name="msg_000a2686" formatted="false">"Stop"</string>
+<string name="msg_43d14ef4" formatted="false">"Replay"</string>
+<string name="msg_efc1cbb8" formatted="false">"Playback failed: "</string>
+<string name="msg_02249420" formatted="false">"Transcribing"</string>
+<string name="msg_02421282" formatted="false">"Needs attention"</string>
+<string name="msg_016c2176" formatted="false">"Done"</string>
+<string name="msg_53c38931" formatted="false">"Processing · "</string>
+<string name="msg_000a6c80" formatted="false">"All"</string>
+<string name="msg_fd515f06" formatted="false">"Active / queued "</string>
+<string name="msg_d3a61955" formatted="false">" · Needs attention "</string>
+<string name="msg_b9bde8e1" formatted="false">" · Done "</string>
+<string name="msg_3737e67a" formatted="false">"Showing the latest 100 segments. View the rest in the timeline."</string>
+<string name="msg_3d6e003a" formatted="false">"Transcript and timestamps saved. Replay to check."</string>
+<string name="msg_bcf72633" formatted="false">"Audio saved. Offline transcription needs an imported model; cloud needs configuration."</string>
+<string name="msg_310ae1f3" formatted="false">"View transcript"</string>
+<string name="msg_4465c0a4" formatted="false">"Retry segment"</string>
+<string name="msg_cded5139" formatted="false">"Import a model or configure cloud transcription in Settings first."</string>
+<string name="msg_cca9b437" formatted="false">"Queued. Existing transcript retained."</string>
+<string name="msg_a1882421" formatted="false">"No matching recordings. Record some audio and check back."</string>
+<string name="msg_665604e1" formatted="false">"LifeMemory · Microphone"</string>
+<string name="msg_75282a4e" formatted="false">"LifeMemory · Paused"</string>
+<string name="msg_75335971" formatted="false">"LifeMemory · Recording"</string>
+<string name="msg_6d9f2e11" formatted="false">"Recording on-device · "</string>
+<string name="msg_92f58e2b" formatted="false">" min · Transcription queue "</string>
+<string name="msg_328b6bd6" formatted="false">"Daily recap"</string>
+<string name="msg_48b5adf7" formatted="false">"Your daily recap is ready"</string>
+<string name="msg_1b7be0e7" formatted="false">" · Tap to read your recap"</string>
+</resources>

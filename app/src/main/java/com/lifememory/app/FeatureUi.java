@@ -26,51 +26,54 @@ class FeatureUi {
       a.row(
           hero,
           a.button(
-              CaptureService.paused ? "继续录音" : "暂停录音",
+              CaptureService.paused ? I18n.t(a, "继续录音") : I18n.t(a, "暂停录音"),
               () -> a.startService(new Intent(a, CaptureService.class).setAction("pause"))),
           a.button(
-              "标记此刻",
+              I18n.t(a, "标记此刻"),
               () -> {
                 if (CaptureService.paused) {
-                  a.message("录音已暂停，请继续后再标记。");
+                  a.message(I18n.t(a, "录音已暂停，请继续后再标记。"));
                   return;
                 }
                 a.startService(new Intent(a, CaptureService.class).setAction("mark"));
               }));
     a.row(
         a.body,
-        a.button("记录此刻", this::context),
-        a.button("重要时刻", this::highlights),
+        a.button(I18n.t(a, "记录此刻"), this::context),
+        a.button(I18n.t(a, "重要时刻"), this::highlights),
         a.button(
-            "待转写",
+            I18n.t(a, "待转写"),
             () -> {
               if (!SpeechJobs.available(a)) {
-                a.message("请在设置中导入离线模型，或选择云端转写并配置接口。");
+                a.message(I18n.t(a, "请在设置中导入离线模型，或选择云端转写并配置接口。"));
                 return;
               }
               int count = SpeechJobs.retry(a);
-              a.message("已加入转写队列：" + count + " 条");
+              a.message(I18n.t(a, "已加入转写队列：") + count + I18n.t(a, " 条"));
             }));
-    a.body.addView(a.button("处理中心 · 查看进度与失败记录", () -> ProcessingCenter.show(a)));
+    a.body.addView(a.button(I18n.t(a, "处理中心 · 查看进度与失败记录"), () -> ProcessingCenter.show(a)));
   }
 
   void updateStatus(TextView label) {
     String state =
-        CaptureService.active ? (CaptureService.paused ? "已暂停 · 麦克风关闭" : "录音中 · 麦克风开启") : "已停止";
+        CaptureService.active
+            ? (CaptureService.paused ? I18n.t(a, "已暂停 · 麦克风关闭") : I18n.t(a, "录音中 · 麦克风开启"))
+            : I18n.t(a, "已停止");
     long saved = a.getSharedPreferences("capture", 0).getLong("last_saved", 0);
     String last =
         saved == 0
-            ? "尚无片段"
-            : "最近保存 "
+            ? I18n.t(a, "尚无片段")
+            : I18n.t(a, "最近保存 ")
                 + new java.text.SimpleDateFormat("HH:mm:ss", Locale.CHINA).format(new Date(saved));
     label.setText(
         state
             + (CaptureService.active
-                ? " · 会话 " + clock(System.currentTimeMillis() - CaptureService.sessionStarted)
+                ? I18n.t(a, " · 会话 ")
+                    + clock(System.currentTimeMillis() - CaptureService.sessionStarted)
                 : "")
             + "\n"
             + last
-            + " · 转写队列 "
+            + I18n.t(a, " · 转写队列 ")
             + SpeechJobs.pendingCount());
   }
 
@@ -80,38 +83,40 @@ class FeatureUi {
   }
 
   void event(Store.Event e, LinearLayout card) {
-    if (e.pinned) card.addView(a.text("★ 重要时刻 · 已保护原音频", 12, 0xff547567));
+    if (e.pinned) card.addView(a.text(I18n.t(a, "★ 重要时刻 · 已保护原音频"), 12, 0xff547567));
     if (e.kind.equals("audio")) {
       JSONObject meta = e.metadata();
       card.addView(
           a.text(
-              "时长 "
-                  + (meta.has("duration_ms") ? clock(meta.optLong("duration_ms", 0)) : "未分析")
+              I18n.t(a, "时长 ")
+                  + (meta.has("duration_ms")
+                      ? clock(meta.optLong("duration_ms", 0))
+                      : I18n.t(a, "未分析"))
                   + " · "
-                  + meta.optString("asr", "未转写")
-                  + (e.path.isEmpty() ? " · 原音频未保留" : ""),
+                  + meta.optString("asr", I18n.t(a, "未转写"))
+                  + (e.path.isEmpty() ? I18n.t(a, " · 原音频未保留") : ""),
               12,
               0xff788278));
       if (meta.has("asr_error")) card.addView(a.text(meta.optString("asr_error"), 12, 0xff985e42));
       a.row(
           card,
           a.button(
-              e.pinned ? "取消重要标记" : "保留为重要",
+              e.pinned ? I18n.t(a, "取消重要标记") : I18n.t(a, "保留为重要"),
               () -> {
                 a.db.pin(e.id, !e.pinned);
                 a.render();
               }),
-          a.button("转写与定位", () -> transcript(e)));
+          a.button(I18n.t(a, "转写与定位"), () -> transcript(e)));
     }
     if (e.kind.equals("bookmark"))
       a.row(
           card,
           a.button(
-              "回听此刻",
+              I18n.t(a, "回听此刻"),
               () -> {
                 Store.Event audio = a.db.anchor(e.metadata().optLong("anchor_time", 0));
                 if (audio == null || audio.path.isEmpty()) {
-                  a.message("对应录音尚未保存或已不存在。");
+                  a.message(I18n.t(a, "对应录音尚未保存或已不存在。"));
                   return;
                 }
                 a.play(audio.path, e.metadata().optLong("offset_ms", 0));
@@ -121,7 +126,7 @@ class FeatureUi {
   void transcript(Store.Event e) {
     JSONArray segments = e.metadata().optJSONArray("segments");
     if (segments == null || segments.length() == 0) {
-      a.message("这条记录还没有带时间戳的转写。可使用离线模型，或支持 verbose_json / diarized_json 的云端语音服务。");
+      a.message(I18n.t(a, "这条记录还没有带时间戳的转写。可使用离线模型，或支持 verbose_json / diarized_json 的云端语音服务。"));
       return;
     }
     LinearLayout list = a.column();
@@ -151,20 +156,20 @@ class FeatureUi {
     ScrollView scroll = new ScrollView(a);
     scroll.addView(list);
     new AlertDialog.Builder(a)
-        .setTitle("转写 · 点击回听 / 长按标注说话人")
+        .setTitle(I18n.t(a, "转写 · 点击回听 / 长按标注说话人"))
         .setView(scroll)
-        .setPositiveButton("关闭", null)
+        .setPositiveButton(I18n.t(a, "关闭"), null)
         .show();
   }
 
   private void renameSpeaker(Store.Event e, JSONObject segment, Button line) {
-    EditText name = a.editor("例如：我 / 同事（手动标注）", segment.optString("speaker", ""));
+    EditText name = a.editor(I18n.t(a, "例如：我 / 同事（手动标注）"), segment.optString("speaker", ""));
     new AlertDialog.Builder(a)
-        .setTitle("标注这一段的说话人")
+        .setTitle(I18n.t(a, "标注这一段的说话人"))
         .setView(name)
-        .setNegativeButton("取消", null)
+        .setNegativeButton(I18n.t(a, "取消"), null)
         .setPositiveButton(
-            "保存",
+            I18n.t(a, "保存"),
             (d, w) -> {
               try {
                 Store.Event latest = a.db.find(e.id);
@@ -204,41 +209,41 @@ class FeatureUi {
         count++;
         list.addView(a.text("#" + e.id + " · " + e.text, 16, 0xff263d34));
         if (e.kind.equals("audio") && !e.path.isEmpty())
-          list.addView(a.button("回听", () -> a.play(e.path, 0)));
+          list.addView(a.button(I18n.t(a, "回听"), () -> a.play(e.path, 0)));
         else if (e.kind.equals("bookmark"))
           list.addView(
               a.button(
-                  "回听标记",
+                  I18n.t(a, "回听标记"),
                   () -> {
                     Store.Event audio = a.db.anchor(e.metadata().optLong("anchor_time", 0));
                     if (audio != null) a.play(audio.path, e.metadata().optLong("offset_ms", 0));
-                    else a.message("等待对应片段保存。");
+                    else a.message(I18n.t(a, "等待对应片段保存。"));
                   }));
       }
-    if (count == 0) list.addView(a.text("录音时标记此刻，或将已有录音保留为重要。", 15, 0xff788278));
+    if (count == 0) list.addView(a.text(I18n.t(a, "录音时标记此刻，或将已有录音保留为重要。"), 15, 0xff788278));
     ScrollView scroll = new ScrollView(a);
     scroll.addView(list);
     new AlertDialog.Builder(a)
-        .setTitle(a.selected + " · 重要时刻")
+        .setTitle(a.selected + I18n.t(a, " · 重要时刻"))
         .setView(scroll)
-        .setPositiveButton("关闭", null)
+        .setPositiveButton(I18n.t(a, "关闭"), null)
         .show();
   }
 
   private void context() {
     LinearLayout form = a.column();
-    EditText place = a.editor("地点（如实验室）", ""),
-        activity = a.editor("活动（如讨论项目）", ""),
-        mood = a.editor("心情 / 状态（由你自评）", "");
+    EditText place = a.editor(I18n.t(a, "地点（如实验室）"), ""),
+        activity = a.editor(I18n.t(a, "活动（如讨论项目）"), ""),
+        mood = a.editor(I18n.t(a, "心情 / 状态（由你自评）"), "");
     form.addView(place);
     form.addView(activity);
     form.addView(mood);
     new AlertDialog.Builder(a)
-        .setTitle("记录此刻的生活上下文")
+        .setTitle(I18n.t(a, "记录此刻的生活上下文"))
         .setView(form)
-        .setNegativeButton("取消", null)
+        .setNegativeButton(I18n.t(a, "取消"), null)
         .setPositiveButton(
-            "保存",
+            I18n.t(a, "保存"),
             (d, w) -> {
               String p = place.getText().toString().trim(),
                   act = activity.getText().toString().trim(),
@@ -248,9 +253,9 @@ class FeatureUi {
                   a.db.add(
                       System.currentTimeMillis(),
                       "context",
-                      (p.isEmpty() ? "" : "地点：" + p + "\n")
-                          + (act.isEmpty() ? "" : "活动：" + act + "\n")
-                          + (m.isEmpty() ? "" : "自评状态：" + m),
+                      (p.isEmpty() ? "" : I18n.t(a, "地点：") + p + "\n")
+                          + (act.isEmpty() ? "" : I18n.t(a, "活动：") + act + "\n")
+                          + (m.isEmpty() ? "" : I18n.t(a, "自评状态：") + m),
                       "",
                       "ready");
               try {
@@ -272,32 +277,34 @@ class FeatureUi {
   void settings() {
     android.content.SharedPreferences prefs = a.getSharedPreferences("life", 0);
     LinearLayout c = a.card();
-    c.addView(a.text("本地语音与录音", 21, 0xff263d34));
+    c.addView(a.text(I18n.t(a, "本地语音与录音"), 21, 0xff263d34));
     c.addView(
         a.text(
-            "当前转写："
-                + (prefs.getString("asr_mode", "local").equals("local") ? "本机离线" : "云端（上传音频）")
-                + " · 模型"
-                + (OfflineAsr.model(a) == null ? "未导入" : "已就绪"),
+            I18n.t(a, "当前转写：")
+                + (prefs.getString("asr_mode", "local").equals("local")
+                    ? I18n.t(a, "本机离线")
+                    : I18n.t(a, "云端（上传音频）"))
+                + I18n.t(a, " · 模型")
+                + (OfflineAsr.model(a) == null ? I18n.t(a, "未导入") : I18n.t(a, "已就绪")),
             14,
             0xff547567));
     a.row(
         c,
         a.button(
-            "转写方式",
+            I18n.t(a, "转写方式"),
             () ->
                 new AlertDialog.Builder(a)
-                    .setTitle("选择转写方式")
+                    .setTitle(I18n.t(a, "选择转写方式"))
                     .setItems(
-                        new String[] {"本机离线（不上传音频）", "云端接口（上传音频）"},
+                        new String[] {I18n.t(a, "本机离线（不上传音频）"), I18n.t(a, "云端接口（上传音频）")},
                         (d, which) -> {
                           if (which == 1)
                             new AlertDialog.Builder(a)
-                                .setTitle("启用云端转写")
-                                .setMessage("之后的录音会发送到你设置的语音服务进行转写。仅日记整理和聊天不需要上传原始音频。")
-                                .setNegativeButton("取消", null)
+                                .setTitle(I18n.t(a, "启用云端转写"))
+                                .setMessage(I18n.t(a, "之后的录音会发送到你设置的语音服务进行转写。仅日记整理和聊天不需要上传原始音频。"))
+                                .setNegativeButton(I18n.t(a, "取消"), null)
                                 .setPositiveButton(
-                                    "启用",
+                                    I18n.t(a, "启用"),
                                     (dd, w) -> {
                                       prefs.edit().putString("asr_mode", "cloud").apply();
                                       a.render();
@@ -310,18 +317,19 @@ class FeatureUi {
                         })
                     .show()),
         a.button(
-            "导入离线模型",
+            I18n.t(a, "导入离线模型"),
             () ->
                 a.startActivityForResult(
                     new Intent(Intent.ACTION_OPEN_DOCUMENT)
                         .setType("application/zip")
                         .addCategory(Intent.CATEGORY_OPENABLE),
                     40)));
-    c.addView(a.text("下载 Vosk 小型中文模型 ZIP，保持压缩包原样导入。约 42 MB，首次导入后可离线使用。", 13, 0xff788278));
+    c.addView(
+        a.text(I18n.t(a, "下载 Vosk 小型中文模型 ZIP，保持压缩包原样导入。约 42 MB，首次导入后可离线使用。"), 13, 0xff788278));
     a.row(
         c,
         a.button(
-            "获取中文模型",
+            I18n.t(a, "获取中文模型"),
             () ->
                 a.startActivity(
                     new Intent(
@@ -329,12 +337,12 @@ class FeatureUi {
                         Uri.parse(
                             "https://alphacephei.com/vosk/models/vosk-model-small-cn-0.22.zip")))),
         a.button(
-            "录音分段",
+            I18n.t(a, "录音分段"),
             () ->
                 new AlertDialog.Builder(a)
-                    .setTitle("每段长度（较长可减少切换间隙）")
+                    .setTitle(I18n.t(a, "每段长度（较长可减少切换间隙）"))
                     .setItems(
-                        new String[] {"1 分钟", "3 分钟", "5 分钟"},
+                        new String[] {I18n.t(a, "1 分钟"), I18n.t(a, "3 分钟"), I18n.t(a, "5 分钟")},
                         (d, w) -> {
                           prefs
                               .edit()
@@ -344,16 +352,16 @@ class FeatureUi {
                         })
                     .show()));
     CheckBox silence = new CheckBox(a);
-    silence.setText("过滤静音片段（实验性，默认保留全部）");
+    silence.setText(I18n.t(a, "过滤静音片段（实验性，默认保留全部）"));
     silence.setChecked(prefs.getBoolean("discard_silence", false));
     silence.setOnCheckedChangeListener(
         (v, enabled) -> prefs.edit().putBoolean("discard_silence", enabled).apply());
     c.addView(silence);
-    c.addView(a.text("静音过滤使用简单音量阈值，安静或远处的讲话可能被误判；重要录音请保持关闭。", 12, 0xff788278));
+    c.addView(a.text(I18n.t(a, "静音过滤使用简单音量阈值，安静或远处的讲话可能被误判；重要录音请保持关闭。"), 12, 0xff788278));
     LinearLayout recap = a.card();
-    recap.addView(a.text("晚间每日回顾", 21, 0xff263d34));
+    recap.addView(a.text(I18n.t(a, "晚间每日回顾"), 21, 0xff263d34));
     CheckBox automatic = new CheckBox(a);
-    automatic.setText("自动整理并通知我");
+    automatic.setText(I18n.t(a, "自动整理并通知我"));
     automatic.setChecked(prefs.getBoolean("daily_enabled", false));
     automatic.setOnCheckedChangeListener(
         (v, on) -> {
@@ -375,7 +383,7 @@ class FeatureUi {
     a.row(
         recap,
         a.button(
-            "回顾时间 " + time,
+            I18n.t(a, "回顾时间 ") + time,
             () ->
                 new TimePickerDialog(
                         a,
@@ -389,44 +397,53 @@ class FeatureUi {
                         true)
                     .show()),
         a.button(
-            "回顾风格",
+            I18n.t(a, "回顾风格"),
             () ->
                 new AlertDialog.Builder(a)
-                    .setTitle("回顾风格")
+                    .setTitle(I18n.t(a, "回顾风格"))
                     .setItems(
-                        new String[] {"温暖日记", "工作复盘", "简洁事实"},
+                        new String[] {I18n.t(a, "温暖日记"), I18n.t(a, "工作复盘"), I18n.t(a, "简洁事实")},
                         (d, w) -> {
                           prefs
                               .edit()
-                              .putString("recap_style", new String[] {"温暖日记", "工作复盘", "简洁事实"}[w])
+                              .putString(
+                                  "recap_style",
+                                  new String[] {
+                                        I18n.t(a, "温暖日记"), I18n.t(a, "工作复盘"), I18n.t(a, "简洁事实")
+                                      }
+                                      [w])
                               .apply();
                         })
                     .show()));
     recap.addView(
         a.text(
-            "每日概览最多50字，待办单独列出，可展开原始记录。无AI接口时显示记录概况；有接口时仅发送文字与相关上下文。系统后台调度可能延迟。", 13, 0xff788278));
+            I18n.t(a, "每日概览最多50字，待办单独列出，可展开原始记录。无AI接口时显示记录概况；有接口时仅发送文字与相关上下文。系统后台调度可能延迟。"),
+            13,
+            0xff788278));
     String error = prefs.getString("recap_error", "");
-    if (!error.isEmpty()) recap.addView(a.text("最近回顾未完成：" + error, 12, 0xff985e42));
+    if (!error.isEmpty()) recap.addView(a.text(I18n.t(a, "最近回顾未完成：") + error, 12, 0xff985e42));
     LinearLayout storage = a.card();
-    storage.addView(a.text("原始音频与存储", 21, 0xff263d34));
+    storage.addView(a.text(I18n.t(a, "原始音频与存储"), 21, 0xff263d34));
     storage.addView(
         a.text(
-            String.format(Locale.CHINA, "已保存音频：%.1f MB", a.db.audioBytes() / 1048576.0)
-                + " · 保留 "
+            String.format(Locale.CHINA, I18n.t(a, "已保存音频：%.1f MB"), a.db.audioBytes() / 1048576.0)
+                + I18n.t(a, " · 保留 ")
                 + (prefs.getInt("retention_days", 0) == 0
-                    ? "永久"
-                    : prefs.getInt("retention_days", 0) + " 天"),
+                    ? I18n.t(a, "永久")
+                    : prefs.getInt("retention_days", 0) + I18n.t(a, " 天")),
             14,
             0xff547567));
     a.row(
         storage,
         a.button(
-            "保留期限",
+            I18n.t(a, "保留期限"),
             () ->
                 new AlertDialog.Builder(a)
-                    .setTitle("过期音频将删除，文字与重要时刻保留")
+                    .setTitle(I18n.t(a, "过期音频将删除，文字与重要时刻保留"))
                     .setItems(
-                        new String[] {"永久保留", "7 天", "30 天", "90 天"},
+                        new String[] {
+                          I18n.t(a, "永久保留"), I18n.t(a, "7 天"), I18n.t(a, "30 天"), I18n.t(a, "90 天")
+                        },
                         (d, w) -> {
                           prefs
                               .edit()
@@ -437,27 +454,28 @@ class FeatureUi {
                         })
                     .show()),
         a.button(
-            "清理过期音频",
+            I18n.t(a, "清理过期音频"),
             () -> {
               int days = prefs.getInt("retention_days", 0);
               if (days == 0) {
-                a.message("当前为永久保留；请先选择保留期限。");
+                a.message(I18n.t(a, "当前为永久保留；请先选择保留期限。"));
                 return;
               }
               new AlertDialog.Builder(a)
-                  .setTitle("清理 " + days + " 天前的原始音频？")
-                  .setMessage("已标记的重要音频不会删除。未转写的过期录音也会删除，建议先导出备份。")
-                  .setNegativeButton("取消", null)
+                  .setTitle(I18n.t(a, "清理 ") + days + I18n.t(a, " 天前的原始音频？"))
+                  .setMessage(I18n.t(a, "已标记的重要音频不会删除。未转写的过期录音也会删除，建议先导出备份。"))
+                  .setNegativeButton(I18n.t(a, "取消"), null)
                   .setPositiveButton(
-                      "清理",
+                      I18n.t(a, "清理"),
                       (d, w) -> {
                         int count = a.db.purgeAudio(System.currentTimeMillis() - days * 86400000L);
                         a.render();
-                        a.message("已清理 " + count + " 个音频文件，文字仍保留。");
+                        a.message(I18n.t(a, "已清理 ") + count + I18n.t(a, " 个音频文件，文字仍保留。"));
                       })
                   .show();
             }));
-    storage.addView(a.text("选择期限后每天自动清理过期音频。文字、重要音频与标记关联的音频会保留。手动清理前建议备份。", 12, 0xff788278));
+    storage.addView(
+        a.text(I18n.t(a, "选择期限后每天自动清理过期音频。文字、重要音频与标记关联的音频会保留。手动清理前建议备份。"), 12, 0xff788278));
   }
 
   void install(Uri uri) {
@@ -472,14 +490,14 @@ class FeatureUi {
                 () -> {
                   a.busy = false;
                   a.render();
-                  a.message("离线模型已就绪，录音会在本机转写。");
+                  a.message(I18n.t(a, "离线模型已就绪，录音会在本机转写。"));
                 });
           } catch (Exception | LinkageError e) {
             a.runOnUiThread(
                 () -> {
                   a.busy = false;
                   a.render();
-                  a.message("模型导入失败：" + e.getMessage());
+                  a.message(I18n.t(a, "模型导入失败：") + e.getMessage());
                 });
           }
         });

@@ -10,7 +10,7 @@ import java.io.*;
 final class AudioPlayer {
   static void show(MainActivity activity, String path, long offset) {
     if (path.isEmpty() || !new File(path).isFile()) {
-      activity.message("原音频未保存或已清理。");
+      activity.message(I18n.t(activity, "原音频未保存或已清理。"));
       return;
     }
     MediaPlayer player = new MediaPlayer();
@@ -27,15 +27,15 @@ final class AudioPlayer {
       SeekBar seek = new SeekBar(activity);
       seek.setMax(duration);
       content.addView(seek);
-      Button toggle = activity.button("暂停", () -> {});
+      Button toggle = activity.button(I18n.t(activity, "暂停"), () -> {});
       toggle.setOnClickListener(
           v -> {
             if (player.isPlaying()) {
               player.pause();
-              toggle.setText("继续播放");
+              toggle.setText(I18n.t(activity, "继续播放"));
             } else {
               player.start();
-              toggle.setText("暂停");
+              toggle.setText(I18n.t(activity, "暂停"));
             }
           });
       content.addView(toggle);
@@ -76,9 +76,9 @@ final class AudioPlayer {
           });
       AlertDialog dialog =
           new AlertDialog.Builder(activity)
-              .setTitle("原声回听")
+              .setTitle(I18n.t(activity, "原声回听"))
               .setView(content)
-              .setPositiveButton("停止", null)
+              .setPositiveButton(I18n.t(activity, "停止"), null)
               .create();
       Runnable tick =
           new Runnable() {
@@ -100,7 +100,7 @@ final class AudioPlayer {
           });
       player.setOnCompletionListener(
           p -> {
-            toggle.setText("重新播放");
+            toggle.setText(I18n.t(activity, "重新播放"));
           });
       activity.playbackDialog = dialog;
       dialog.show();
@@ -109,7 +109,7 @@ final class AudioPlayer {
     } catch (Exception e) {
       handler.removeCallbacksAndMessages(null);
       player.release();
-      activity.message("回听失败：" + e.getMessage());
+      activity.message(I18n.t(activity, "回听失败：") + e.getMessage());
     }
   }
 }

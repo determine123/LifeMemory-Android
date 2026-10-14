@@ -61,7 +61,10 @@ public class RecapWorker extends Worker {
       if (!recap.isEmpty()) {
         NotificationManager n = c.getSystemService(NotificationManager.class);
         n.createNotificationChannel(
-            new NotificationChannel("recap", "每日回顾", NotificationManager.IMPORTANCE_DEFAULT));
+            new NotificationChannel(
+                "recap",
+                I18n.t(getApplicationContext(), "每日回顾"),
+                NotificationManager.IMPORTANCE_DEFAULT));
         Intent open = new Intent(c, MainActivity.class).putExtra("day", day.toString());
         PendingIntent click =
             PendingIntent.getActivity(
@@ -73,8 +76,8 @@ public class RecapWorker extends Worker {
               80,
               new Notification.Builder(c, "recap")
                   .setSmallIcon(R.drawable.ic_mark)
-                  .setContentTitle("你的一天，已经整理好了")
-                  .setContentText(day + " · 点击查看每日回顾")
+                  .setContentTitle(I18n.t(getApplicationContext(), "你的一天，已经整理好了"))
+                  .setContentText(day + I18n.t(getApplicationContext(), " · 点击查看每日回顾"))
                   .setContentIntent(click)
                   .setAutoCancel(true)
                   .build());

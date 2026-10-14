@@ -7,6 +7,13 @@ import java.util.regex.*;
 /** Local date filtering and keyword ranking; every result retains its original event ID. */
 public class MemorySearch {
   public static List<Store.Event> select(String query, List<Store.Event> all, LocalDate today) {
+    String q = query.toLowerCase(Locale.ROOT);
+    query =
+        q.replaceAll("\\bday before yesterday\\b", "前天")
+            .replaceAll("\\byesterday\\b", "昨天")
+            .replaceAll("\\btoday\\b", "今天")
+            .replaceAll("\\blast week\\b", "上周")
+            .replaceAll("\\bthis week\\b", "本周");
     LocalDate start = null, end = null;
     Matcher date = Pattern.compile("20\\d{2}-\\d{2}-\\d{2}").matcher(query);
     if (date.find()) {

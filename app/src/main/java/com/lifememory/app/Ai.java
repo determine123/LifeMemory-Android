@@ -52,6 +52,13 @@ public class Ai {
   }
 
   public String chat(String system, String input) throws Exception {
+    system +=
+        I18n.english(ctx)
+            ? "\n"
+                  + "Write newly generated answers, summaries and task descriptions in English."
+                  + " Preserve source quotations, names and JSON keys. Any daily recap must still"
+                  + " contain at most 50 Unicode characters including punctuation."
+            : "\n用中文生成新回答、总结和待办，保留原始引用与JSON字段名。";
     HttpURLConnection c = connection("/chat/completions");
     c.setRequestProperty("Content-Type", "application/json");
     JSONObject body =

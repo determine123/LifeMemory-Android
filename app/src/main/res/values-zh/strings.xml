@@ -1,0 +1,242 @@
+<resources>
+<string name="app_name">拾光 · LifeMemory</string>
+<string name="msg_348c7d70" formatted="false">"录音未能启动："</string>
+<string name="msg_db08e8dd" formatted="false">"拾起今天的光"</string>
+<string name="msg_c2b907aa" formatted="false">"让记忆有迹可循"</string>
+<string name="msg_9bdcf9c0" formatted="false">"把一天留下来"</string>
+<string name="msg_019167c1" formatted="false">"时间线"</string>
+<string name="msg_00114a16" formatted="false">"记忆"</string>
+<string name="msg_00116b70" formatted="false">"设置"</string>
+<string name="msg_28bb3e31" formatted="false">"回到今天"</string>
+<string name="msg_8cacf13c" formatted="false">"Ⅱ 已暂停，等你继续"</string>
+<string name="msg_24fc92ff" formatted="false">"● 正在聆听你的今天"</string>
+<string name="msg_f625f46a" formatted="false">"每一份日常，都值得记住"</string>
+<string name="msg_2f1d208c" formatted="false">"声音、照片和文字，汇成属于你的时间线。"</string>
+<string name="msg_262be6ab" formatted="false">"停止记录"</string>
+<string name="msg_2c919db0" formatted="false">"开始记录"</string>
+<string name="msg_013c3c6d" formatted="false">"写一笔"</string>
+<string name="msg_022adf89" formatted="false">"选照片"</string>
+<string name="msg_000c683a" formatted="false">"拍照"</string>
+<string name="msg_cc8c1a70" formatted="false">"整理这一天"</string>
+<string name="msg_d8693da8" formatted="false">"正在处理，请稍候…"</string>
+<string name="msg_a629f9d5" formatted="false">"我的一天 · 50字概览"</string>
+<string name="msg_2eed8fd9" formatted="false">"查看回顾与原始记录"</string>
+<string name="msg_fe48c3f8" formatted="false">"回顾依据 · "</string>
+<string name="msg_e2def1c0" formatted="false">"\n\n原始记录（最多300条）\n"</string>
+<string name="msg_000a72da" formatted="false">"关闭"</string>
+<string name="msg_2ec506ce" formatted="false">"有新增或修改的记录，回顾待更新。"</string>
+<string name="msg_357c5e81" formatted="false">"回顾已覆盖当前记录。"</string>
+<string name="msg_2caf7f69" formatted="false">"待办清单"</string>
+<string name="msg_5f60794e" formatted="false">"时间线  /  "</string>
+<string name="msg_01a3e8a6" formatted="false">" 条记录"</string>
+<string name="msg_593f1e8b" formatted="false">"今天的故事，从这里开始"</string>
+<string name="msg_1559c12d" formatted="false">"写下一个念头，拍一张照片，或开始录音。你的记录会保存在这台手机上。"</string>
+<string name="msg_000b5d03" formatted="false">"声音"</string>
+<string name="msg_000e2dc0" formatted="false">"照片"</string>
+<string name="msg_4457d759" formatted="false">"重要时刻"</string>
+<string name="msg_a548deea" formatted="false">"生活上下文"</string>
+<string name="msg_000ca6b0" formatted="false">"文字"</string>
+<string name="msg_422e3abe" formatted="false">" · 待处理"</string>
+<string name="msg_42e10117" formatted="false">" · 转写中"</string>
+<string name="msg_e5157f0c" formatted="false">" · 原音频过期"</string>
+<string name="msg_23981f5e" formatted="false">"AI 理解图片"</string>
+<string name="msg_000c9631" formatted="false">"播放"</string>
+<string name="msg_0011afad" formatted="false">"转写"</string>
+<string name="msg_000ff33b" formatted="false">"编辑"</string>
+<string name="msg_01420e59" formatted="false">"加待办"</string>
+<string name="msg_000a8844" formatted="false">"删除"</string>
+<string name="msg_197e38ae" formatted="false">"删除这条记录？"</string>
+<string name="msg_923407ce" formatted="false">"记录及附件将从本机删除。已有总结需重新生成。"</string>
+<string name="msg_000a9472" formatted="false">"取消"</string>
+<string name="msg_3ff85ed6" formatted="false">"此刻发生了什么？"</string>
+<string name="msg_0d4952e0" formatted="false">"写一笔 · 记录当前时刻"</string>
+<string name="msg_000a071b" formatted="false">"保存"</string>
+<string name="msg_40efaf39" formatted="false">"记录内容"</string>
+<string name="msg_3bf15a20" formatted="false">"编辑记录"</string>
+<string name="msg_4eaad54f" formatted="false">"开始记录今天"</string>
+<string name="msg_c3aa2a79" formatted="false">"应用会显示持续通知，按设置的间隔分段保存，单次最长12小时。请让周围的人知道你正在录音。默认本机转写；只有主动启用云端转写才上传音频。"</string>
+<string name="msg_000bdacb" formatted="false">"开始"</string>
+<string name="msg_eec629ff" formatted="false">"需要麦克风权限才能录音。"</string>
+<string name="msg_6c3c2816" formatted="false">"无法打开相机："</string>
+<string name="msg_1642d2b0" formatted="false">"无法读取照片"</string>
+<string name="msg_036b1423" formatted="false">"照片 · 正在识别文字"</string>
+<string name="msg_8a7644df" formatted="false">"照片记录 · 未发现可识别文字"</string>
+<string name="msg_01136c56" formatted="false">"识别未完成，可手动编辑："</string>
+<string name="msg_0c906094" formatted="false">"图片导入失败："</string>
+<string name="msg_a3f71538" formatted="false">"请在设置中导入离线中文模型，或启用云端转写并配置接口。"</string>
+<string name="msg_89b19ec7" formatted="false">"请先配置 AI 服务和视觉模型。"</string>
+<string name="msg_d64efa84" formatted="false">"理解这张照片"</string>
+<string name="msg_95dc3cfe" formatted="false">"将把这张照片发送给设置中的 AI 服务。仅 OCR 无需上传。"</string>
+<string name="msg_000a564a" formatted="false">"分析"</string>
+<string name="msg_1340a756" formatted="false">"\n\n图片理解：\n"</string>
+<string name="msg_45e7d343" formatted="false">"[记录 #"</string>
+<string name="msg_a875e5df" formatted="false">"这一天还没有记录。"</string>
+<string name="msg_18affbb7" formatted="false">"问问过去的自己"</string>
+<string name="msg_ba668726" formatted="false">"关键词搜索所有日期的记录。AI 回答附原始记录编号。"</string>
+<string name="msg_10897ee3" formatted="false">"例如：项目讨论 / 午餐 / 昨天"</string>
+<string name="msg_000c9c86" formatted="false">"搜索"</string>
+<string name="msg_02441c84" formatted="false">"问记忆"</string>
+<string name="msg_2f920927" formatted="false">"新增待办"</string>
+<string name="msg_32b12c4e" formatted="false">"下一步要做什么？"</string>
+<string name="msg_333eaab5" formatted="false">"添加到 "</string>
+<string name="msg_000da405" formatted="false">"添加"</string>
+<string name="msg_016e4d77" formatted="false">"已添加"</string>
+<string name="msg_ae6f3719" formatted="false">"请输入关键词。"</string>
+<string name="msg_017baeee" formatted="false">"找到 "</string>
+<string name="msg_68c4f029" formatted="false">"正在检索记忆…"</string>
+<string name="msg_02464bf0" formatted="false">"问题："</string>
+<string name="msg_41a85fc7" formatted="false">"\n证据：\n"</string>
+<string name="msg_03c26c2c" formatted="false">"AI 服务"</string>
+<string name="msg_f3b72884" formatted="false">"照片 OCR 与离线转写在本机完成。选择云端转写后上传音频；AI 回顾与问答发送相关文字。密钥由 Android Keystore 加密保存。"</string>
+<string name="msg_20cdce86" formatted="false">"API 地址（含 /v1）"</string>
+<string name="msg_23363f4c" formatted="false">"已保存密钥；留空保留"</string>
+<string name="msg_2be92f8e" formatted="false">"对话模型"</string>
+<string name="msg_41e2e9b0" formatted="false">"语音模型"</string>
+<string name="msg_40b3458d" formatted="false">"视觉模型"</string>
+<string name="msg_1c53439a" formatted="false">"兼容 OpenAI 的 HTTPS 接口"</string>
+<string name="msg_1641003c" formatted="false">"视觉模型（须支持图片输入）"</string>
+<string name="msg_25b617cb" formatted="false">"保存设置"</string>
+<string name="msg_9cca24d2" formatted="false">"请填写模型名称"</string>
+<string name="msg_016ab08d" formatted="false">"已保存"</string>
+<string name="msg_bfebe72e" formatted="false">"关闭 AI"</string>
+<string name="msg_f8d8b28e" formatted="false">"你的数据，由你掌握"</string>
+<string name="msg_40de979f" formatted="false">"记录存放在应用私有目录。卸载会清除本地数据，请先导出备份。录音按 60 秒分段，可在时间线手动重试转写。"</string>
+<string name="msg_a55ddebc" formatted="false">"导出完整备份"</string>
+<string name="msg_9af55f71" formatted="false">"Omi × Memex × Auday · 独立实现"</string>
+<string name="msg_ed8b78e5" formatted="false">"参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.5.0\n支持 Android 8.0 及以上。"</string>
+<string name="msg_8d0ce986" formatted="false">"Omi 源码"</string>
+<string name="msg_dd644169" formatted="false">"Memex 源码"</string>
+<string name="msg_19471c8f" formatted="false">"请输入有效的 HTTPS API 地址"</string>
+<string name="msg_85546e80" formatted="false">"备份已导出，包含记录和媒体附件。"</string>
+<string name="msg_36de9948" formatted="false">"导出失败："</string>
+<string name="msg_01d3db38" formatted="false">"知道了"</string>
+<string name="msg_3b985ea4" formatted="false">"继续录音"</string>
+<string name="msg_2fd2bed8" formatted="false">"暂停录音"</string>
+<string name="msg_316379a0" formatted="false">"标记此刻"</string>
+<string name="msg_4a47473b" formatted="false">"录音已暂停，请继续后再标记。"</string>
+<string name="msg_40f2c7bc" formatted="false">"记录此刻"</string>
+<string name="msg_017841f2" formatted="false">"待转写"</string>
+<string name="msg_13f536e5" formatted="false">"请在设置中导入离线模型，或选择云端转写并配置接口。"</string>
+<string name="msg_c0561d9e" formatted="false">"已加入转写队列："</string>
+<string name="msg_00006b41" formatted="false">" 条"</string>
+<string name="msg_691865e5" formatted="false">"处理中心 · 查看进度与失败记录"</string>
+<string name="msg_b6fd3566" formatted="false">"已暂停 · 麦克风关闭"</string>
+<string name="msg_51c5f3de" formatted="false">"录音中 · 麦克风开启"</string>
+<string name="msg_016acff8" formatted="false">"已停止"</string>
+<string name="msg_2b6aa5d4" formatted="false">"尚无片段"</string>
+<string name="msg_ee0bd5f4" formatted="false">"最近保存 "</string>
+<string name="msg_41f64d74" formatted="false">" · 会话 "</string>
+<string name="msg_0fbd1bb2" formatted="false">" · 转写队列 "</string>
+<string name="msg_225c19f9" formatted="false">"★ 重要时刻 · 已保护原音频"</string>
+<string name="msg_0190daf7" formatted="false">"时长 "</string>
+<string name="msg_018d9af4" formatted="false">"未分析"</string>
+<string name="msg_0194f457" formatted="false">"未转写"</string>
+<string name="msg_bcff9172" formatted="false">" · 原音频未保留"</string>
+<string name="msg_5b3f5c4f" formatted="false">"取消重要标记"</string>
+<string name="msg_9bfad272" formatted="false">"保留为重要"</string>
+<string name="msg_0b5afeb4" formatted="false">"转写与定位"</string>
+<string name="msg_28c620e5" formatted="false">"回听此刻"</string>
+<string name="msg_2e08c2c5" formatted="false">"对应录音尚未保存或已不存在。"</string>
+<string name="msg_dce799a0" formatted="false">"这条记录还没有带时间戳的转写。可使用离线模型，或支持 verbose_json / diarized_json 的云端语音服务。"</string>
+<string name="msg_9a032161" formatted="false">"转写 · 点击回听 / 长按标注说话人"</string>
+<string name="msg_ef3511a5" formatted="false">"例如：我 / 同事（手动标注）"</string>
+<string name="msg_b0001bda" formatted="false">"标注这一段的说话人"</string>
+<string name="msg_000ad90e" formatted="false">"回听"</string>
+<string name="msg_28c5f217" formatted="false">"回听标记"</string>
+<string name="msg_dc208d82" formatted="false">"等待对应片段保存。"</string>
+<string name="msg_e1231589" formatted="false">"录音时标记此刻，或将已有录音保留为重要。"</string>
+<string name="msg_1b290942" formatted="false">" · 重要时刻"</string>
+<string name="msg_3f7c3a56" formatted="false">"地点（如实验室）"</string>
+<string name="msg_465d211b" formatted="false">"活动（如讨论项目）"</string>
+<string name="msg_4babac92" formatted="false">"心情 / 状态（由你自评）"</string>
+<string name="msg_f6f6e5a2" formatted="false">"记录此刻的生活上下文"</string>
+<string name="msg_0155f0b1" formatted="false">"地点："</string>
+<string name="msg_01a50bed" formatted="false">"活动："</string>
+<string name="msg_67fd6715" formatted="false">"自评状态："</string>
+<string name="msg_7b026f62" formatted="false">"本地语音与录音"</string>
+<string name="msg_66d93173" formatted="false">"当前转写："</string>
+<string name="msg_3078f672" formatted="false">"本机离线"</string>
+<string name="msg_30cdc3ab" formatted="false">"云端（上传音频）"</string>
+<string name="msg_0223c9b3" formatted="false">" · 模型"</string>
+<string name="msg_018eb993" formatted="false">"未导入"</string>
+<string name="msg_016c524b" formatted="false">"已就绪"</string>
+<string name="msg_427128e3" formatted="false">"转写方式"</string>
+<string name="msg_7d78fce3" formatted="false">"选择转写方式"</string>
+<string name="msg_1a4f461e" formatted="false">"本机离线（不上传音频）"</string>
+<string name="msg_001c8289" formatted="false">"云端接口（上传音频）"</string>
+<string name="msg_3fcf9904" formatted="false">"启用云端转写"</string>
+<string name="msg_3333080e" formatted="false">"之后的录音会发送到你设置的语音服务进行转写。仅日记整理和聊天不需要上传原始音频。"</string>
+<string name="msg_000aa6d9" formatted="false">"启用"</string>
+<string name="msg_ab43bd57" formatted="false">"导入离线模型"</string>
+<string name="msg_1cc650c9" formatted="false">"下载 Vosk 小型中文模型 ZIP，保持压缩包原样导入。约 42 MB，首次导入后可离线使用。"</string>
+<string name="msg_859a6783" formatted="false">"获取中文模型"</string>
+<string name="msg_2d9aa62d" formatted="false">"录音分段"</string>
+<string name="msg_da0bcaaf" formatted="false">"每段长度（较长可减少切换间隙）"</string>
+<string name="msg_002141a8" formatted="false">"1 分钟"</string>
+<string name="msg_00222a66" formatted="false">"3 分钟"</string>
+<string name="msg_00231324" formatted="false">"5 分钟"</string>
+<string name="msg_4d626ecb" formatted="false">"过滤静音片段（实验性，默认保留全部）"</string>
+<string name="msg_f4dc6230" formatted="false">"静音过滤使用简单音量阈值，安静或远处的讲话可能被误判；重要录音请保持关闭。"</string>
+<string name="msg_1b8b69b0" formatted="false">"晚间每日回顾"</string>
+<string name="msg_910159c0" formatted="false">"自动整理并通知我"</string>
+<string name="msg_0f004fc2" formatted="false">"回顾时间 "</string>
+<string name="msg_29cc2e8e" formatted="false">"回顾风格"</string>
+<string name="msg_33a170b8" formatted="false">"温暖日记"</string>
+<string name="msg_2be3c3c2" formatted="false">"工作复盘"</string>
+<string name="msg_39c6e3b4" formatted="false">"简洁事实"</string>
+<string name="msg_c976f046" formatted="false">"每日概览最多50字，待办单独列出，可展开原始记录。无AI接口时显示记录概况；有接口时仅发送文字与相关上下文。系统后台调度可能延迟。"</string>
+<string name="msg_34e4ad9d" formatted="false">"最近回顾未完成："</string>
+<string name="msg_5db40894" formatted="false">"原始音频与存储"</string>
+<string name="msg_a117d128" formatted="false">"已保存音频：%.1f MB"</string>
+<string name="msg_41f66f7b" formatted="false">" · 保留 "</string>
+<string name="msg_000d690d" formatted="false">"永久"</string>
+<string name="msg_00005d09" formatted="false">" 天"</string>
+<string name="msg_26135d2d" formatted="false">"保留期限"</string>
+<string name="msg_5dd6405b" formatted="false">"过期音频将删除，文字与重要时刻保留"</string>
+<string name="msg_32617ae9" formatted="false">"永久保留"</string>
+<string name="msg_00012b80" formatted="false">"7 天"</string>
+<string name="msg_00184026" formatted="false">"30 天"</string>
+<string name="msg_001afa60" formatted="false">"90 天"</string>
+<string name="msg_63892f57" formatted="false">"清理过期音频"</string>
+<string name="msg_417fd632" formatted="false">"当前为永久保留；请先选择保留期限。"</string>
+<string name="msg_01ab0d9f" formatted="false">"清理 "</string>
+<string name="msg_1f09d1b5" formatted="false">" 天前的原始音频？"</string>
+<string name="msg_37f18c2e" formatted="false">"已标记的重要音频不会删除。未转写的过期录音也会删除，建议先导出备份。"</string>
+<string name="msg_000dc6a1" formatted="false">"清理"</string>
+<string name="msg_2c5f926d" formatted="false">"已清理 "</string>
+<string name="msg_40f78a7e" formatted="false">" 个音频文件，文字仍保留。"</string>
+<string name="msg_f2914a6c" formatted="false">"选择期限后每天自动清理过期音频。文字、重要音频与标记关联的音频会保留。手动清理前建议备份。"</string>
+<string name="msg_75aebaec" formatted="false">"离线模型已就绪，录音会在本机转写。"</string>
+<string name="msg_bfa112b3" formatted="false">"模型导入失败："</string>
+<string name="msg_3ce42a9d" formatted="false">"原音频未保存或已清理。"</string>
+<string name="msg_000cba1a" formatted="false">"暂停"</string>
+<string name="msg_3b98d197" formatted="false">"继续播放"</string>
+<string name="msg_275bc9ff" formatted="false">"原声回听"</string>
+<string name="msg_000a2686" formatted="false">"停止"</string>
+<string name="msg_43d14ef4" formatted="false">"重新播放"</string>
+<string name="msg_efc1cbb8" formatted="false">"回听失败："</string>
+<string name="msg_02249420" formatted="false">"转写中"</string>
+<string name="msg_02421282" formatted="false">"需处理"</string>
+<string name="msg_016c2176" formatted="false">"已完成"</string>
+<string name="msg_53c38931" formatted="false">"处理中心 · "</string>
+<string name="msg_000a6c80" formatted="false">"全部"</string>
+<string name="msg_fd515f06" formatted="false">"进行/等待 "</string>
+<string name="msg_d3a61955" formatted="false">"  ·  需处理 "</string>
+<string name="msg_b9bde8e1" formatted="false">"  ·  已完成 "</string>
+<string name="msg_3737e67a" formatted="false">"仅显示最近100段，请在时间线查看其余记录。"</string>
+<string name="msg_3d6e003a" formatted="false">"文字与时间戳已保存，可回听核对。"</string>
+<string name="msg_bcf72633" formatted="false">"音频已保存；离线转写需导入模型，云端需自行配置。"</string>
+<string name="msg_310ae1f3" formatted="false">"查看转写"</string>
+<string name="msg_4465c0a4" formatted="false">"重试这段"</string>
+<string name="msg_cded5139" formatted="false">"请先在设置中导入模型或配置云端转写。"</string>
+<string name="msg_cca9b437" formatted="false">"已加入队列，原转写保留。"</string>
+<string name="msg_a1882421" formatted="false">"这里还没有对应的录音。记录一段声音后再来看看。"</string>
+<string name="msg_665604e1" formatted="false">"生活记录 · 麦克风"</string>
+<string name="msg_75282a4e" formatted="false">"拾光 · 已暂停"</string>
+<string name="msg_75335971" formatted="false">"拾光 · 录音中"</string>
+<string name="msg_6d9f2e11" formatted="false">"正在本机记录 · "</string>
+<string name="msg_92f58e2b" formatted="false">" 分钟 · 转写队列 "</string>
+<string name="msg_328b6bd6" formatted="false">"每日回顾"</string>
+<string name="msg_48b5adf7" formatted="false">"你的一天，已经整理好了"</string>
+<string name="msg_1b7be0e7" formatted="false">" · 点击查看每日回顾"</string>
+</resources>

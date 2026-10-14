@@ -87,7 +87,16 @@ public class RecapEngine {
             result,
             parsed.optJSONArray("todos") == null ? new JSONArray() : parsed.getJSONArray("todos"));
       } else {
-        result = localSummary(events);
+        if (I18n.english(c)) {
+          int pending = 0;
+          for (Store.Event e : events)
+            if (e.kind.equals("audio") && !e.status.equals("ready")) pending++;
+          result =
+              compact(
+                  events.size()
+                      + " records today. "
+                      + (pending > 0 ? pending + " audio pending." : "AI is not configured."));
+        } else result = localSummary(events);
         db.summary(day, result);
       }
       db.summarySnapshot(day, fingerprint);

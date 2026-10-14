@@ -21,11 +21,14 @@ public class PlaybackUiTest {
   private Store db;
   private Store.Event event;
   private File audio;
+  private String previousLanguage;
 
   @Before
   public void setup() throws Exception {
     instrument = InstrumentationRegistry.getInstrumentation();
     Context c = instrument.getTargetContext();
+    previousLanguage = c.getSharedPreferences("life", 0).getString("language", null);
+    c.getSharedPreferences("life", 0).edit().putString("language", "zh").commit();
     audio = File.createTempFile("playback-test-", ".wav", c.getCacheDir());
     int size = 16000 * 2 * 12;
     try (OutputStream out = new FileOutputStream(audio)) {
@@ -89,6 +92,11 @@ public class PlaybackUiTest {
       db.close();
     }
     if (audio != null) audio.delete();
+    android.content.SharedPreferences.Editor edit =
+        instrument.getTargetContext().getSharedPreferences("life", 0).edit();
+    if (previousLanguage == null) edit.remove("language");
+    else edit.putString("language", previousLanguage);
+    edit.commit();
   }
 
   private AccessibilityNodeInfo find(AccessibilityNodeInfo root, String text, boolean contains) {

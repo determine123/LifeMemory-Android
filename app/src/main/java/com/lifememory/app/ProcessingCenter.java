@@ -35,9 +35,9 @@ class ProcessingCenter {
     scroll.addView(box);
     AlertDialog dialog =
         new AlertDialog.Builder(a)
-            .setTitle("处理中心 · " + a.selected)
+            .setTitle(I18n.t(a, "处理中心 · ") + a.selected)
             .setView(scroll)
-            .setPositiveButton("关闭", null)
+            .setPositiveButton(I18n.t(a, "关闭"), null)
             .create();
     Handler handler = new Handler(Looper.getMainLooper());
     String[] filter = {"全部"}, previous = {""};
@@ -55,27 +55,32 @@ class ProcessingCenter {
             int[] count = counts(events);
             box.addView(
                 a.text(
-                    "进行/等待 " + count[0] + "  ·  需处理 " + count[1] + "  ·  已完成 " + count[2],
+                    I18n.t(a, "进行/等待 ")
+                        + count[0]
+                        + I18n.t(a, "  ·  需处理 ")
+                        + count[1]
+                        + I18n.t(a, "  ·  已完成 ")
+                        + count[2],
                     14,
                     0xff547567));
             a.row(
                 box,
                 a.button(
-                    "全部",
+                    I18n.t(a, "全部"),
                     () -> {
                       filter[0] = "全部";
                       handler.removeCallbacks(refresh[0]);
                       refresh[0].run();
                     }),
                 a.button(
-                    "需处理",
+                    I18n.t(a, "需处理"),
                     () -> {
                       filter[0] = "需处理";
                       handler.removeCallbacks(refresh[0]);
                       refresh[0].run();
                     }),
                 a.button(
-                    "已完成",
+                    I18n.t(a, "已完成"),
                     () -> {
                       filter[0] = "已完成";
                       handler.removeCallbacks(refresh[0]);
@@ -87,12 +92,12 @@ class ProcessingCenter {
               String s = state(e);
               if (!filter[0].equals("全部") && !filter[0].equals(s)) continue;
               if (shown++ >= 100) {
-                box.addView(a.text("仅显示最近100段，请在时间线查看其余记录。", 12, 0xff788278));
+                box.addView(a.text(I18n.t(a, "仅显示最近100段，请在时间线查看其余记录。"), 12, 0xff788278));
                 break;
               }
               box.addView(
                   a.text(
-                      s
+                      I18n.t(a, s)
                           + " · "
                           + new java.text.SimpleDateFormat("HH:mm", java.util.Locale.CHINA)
                               .format(new java.util.Date(e.time)),
@@ -102,25 +107,28 @@ class ProcessingCenter {
               box.addView(
                   a.text(
                       error.isEmpty()
-                          ? (s.equals("已完成") ? "文字与时间戳已保存，可回听核对。" : "音频已保存；离线转写需导入模型，云端需自行配置。")
+                          ? (s.equals("已完成")
+                              ? I18n.t(a, "文字与时间戳已保存，可回听核对。")
+                              : I18n.t(a, "音频已保存；离线转写需导入模型，云端需自行配置。"))
                           : error,
                       13,
                       0xff788278));
               a.row(
                   box,
-                  a.button("查看转写", () -> new FeatureUi(a).transcript(e)),
+                  a.button(I18n.t(a, "查看转写"), () -> new FeatureUi(a).transcript(e)),
                   a.button(
-                      "重试这段",
+                      I18n.t(a, "重试这段"),
                       () -> {
                         if (!SpeechJobs.available(a)) {
-                          a.message("请先在设置中导入模型或配置云端转写。");
+                          a.message(I18n.t(a, "请先在设置中导入模型或配置云端转写。"));
                           return;
                         }
                         SpeechJobs.submit(a, e.id);
-                        a.message("已加入队列，原转写保留。");
+                        a.message(I18n.t(a, "已加入队列，原转写保留。"));
                       }));
             }
-            if (shown == 0) box.addView(a.text("这里还没有对应的录音。记录一段声音后再来看看。", 14, 0xff788278));
+            if (shown == 0)
+              box.addView(a.text(I18n.t(a, "这里还没有对应的录音。记录一段声音后再来看看。"), 14, 0xff788278));
           }
           handler.postDelayed(refresh[0], 1000);
         };

@@ -54,7 +54,8 @@ public class CaptureService extends Service {
     db = new Store(this);
     getSystemService(NotificationManager.class)
         .createNotificationChannel(
-            new NotificationChannel("capture", "生活记录 · 麦克风", NotificationManager.IMPORTANCE_LOW));
+            new NotificationChannel(
+                "capture", I18n.t(this, "生活记录 · 麦克风"), NotificationManager.IMPORTANCE_LOW));
   }
 
   private int segmentMs() {
@@ -104,17 +105,21 @@ public class CaptureService extends Service {
     Notification.Builder b =
         new Notification.Builder(this, "capture")
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle(paused ? "拾光 · 已暂停" : "拾光 · 录音中")
+            .setContentTitle(paused ? I18n.t(this, "拾光 · 已暂停") : I18n.t(this, "拾光 · 录音中"))
             .setContentText(
-                "本机保存 · "
+                (I18n.english(this) ? "Saved on-device · " : "本机保存 · ")
                     + (System.currentTimeMillis() - sessionStarted) / 60000
-                    + " 分钟 · 转写队列 "
+                    + I18n.t(this, " 分钟 · 转写队列 ")
                     + SpeechJobs.pendingCount())
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true);
     String[] actions = {"pause", "mark", "stop"};
-    String[] labels = {paused ? "继续" : "暂停", "标记此刻", "停止"};
+    String[] labels = {
+      paused ? (I18n.english(this) ? "Resume" : "继续") : I18n.t(this, "暂停"),
+      I18n.t(this, "标记此刻"),
+      I18n.t(this, "停止")
+    };
     for (int i = 0; i < 3; i++)
       b.addAction(
           android.R.drawable.ic_media_pause,
@@ -221,7 +226,7 @@ public class CaptureService extends Service {
       SpeechJobs.refresh(this);
       return;
     }
-    long id = db.add(System.currentTimeMillis(), "bookmark", "重要时刻", "", "ready");
+    long id = db.add(System.currentTimeMillis(), "bookmark", I18n.t(this, "重要时刻"), "", "ready");
     try {
       db.metadata(
           id,
