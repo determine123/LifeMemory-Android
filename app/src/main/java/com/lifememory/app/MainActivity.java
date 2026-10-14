@@ -28,9 +28,9 @@ public class MainActivity extends Activity {
     super.attachBaseContext(I18n.localized(base));
   }
 
-  private static final int BG = 0xfff5f3ec,
-      INK = 0xff263d34,
-      MUTED = 0xff788278,
+  private static final int BG = 0xfff4f2e9,
+      INK = 0xff223d33,
+      MUTED = 0xff6b786f,
       GREEN = 0xff547567;
   Store db;
   private LinearLayout root;
@@ -179,6 +179,7 @@ public class MainActivity extends Activity {
     GradientDrawable d = new GradientDrawable();
     d.setColor(color);
     d.setCornerRadius(dp(radius));
+    d.setStroke(dp(1), color == INK ? INK : 0xffd8ded1);
     return d;
   }
 
@@ -188,7 +189,8 @@ public class MainActivity extends Activity {
     b.setAllCaps(false);
     b.setTextSize(14);
     b.setTextColor(INK);
-    b.setBackground(shape(0xffe7ebe1, 14));
+    b.setBackground(shape(0xffeef0e6, 10));
+    b.setMinHeight(dp(48));
     b.setPadding(dp(10), dp(8), dp(10), dp(8));
     b.setEnabled(!busy);
     b.setOnClickListener(
@@ -211,7 +213,7 @@ public class MainActivity extends Activity {
   LinearLayout card() {
     LinearLayout l = column();
     l.setPadding(dp(18), dp(14), dp(18), dp(14));
-    l.setBackground(shape(0xffffffff, 20));
+    l.setBackground(shape(0xfffbfaf5, 16));
     LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(-1, -2);
     p.setMargins(0, dp(8), 0, dp(8));
     body.addView(l, p);
@@ -239,8 +241,12 @@ public class MainActivity extends Activity {
           return in;
         });
     setContentView(root);
-    root.addView(text("L I F E M E M O R Y", 12, GREEN));
-    root.addView(
+    LinearLayout brandRow = new LinearLayout(this);
+    brandRow.setGravity(Gravity.CENTER_VERTICAL);
+    TextView brand = text("LifeMemory · 拾光", 18, INK);
+    brand.setTypeface(null, Typeface.BOLD);
+    brandRow.addView(brand, new LinearLayout.LayoutParams(0, -2, 1));
+    brandRow.addView(
         button(
             I18n.english(this) ? "English · 切换中文" : "中文 · Switch to English",
             () -> {
@@ -250,10 +256,11 @@ public class MainActivity extends Activity {
                   .apply();
               recreate();
             }));
+    root.addView(brandRow);
     root.addView(
         text(
             tab == 0
-                ? I18n.t(MainActivity.this, "拾起今天的光")
+                ? (I18n.english(this) ? "Your day. Four moments." : "一天，四次回顾。")
                 : tab == 1
                     ? I18n.t(MainActivity.this, "让记忆有迹可循")
                     : I18n.t(MainActivity.this, "把一天留下来"),
@@ -279,6 +286,10 @@ public class MainActivity extends Activity {
               tab = 2;
               render();
             }));
+    LinearLayout navigation = (LinearLayout) root.getChildAt(root.getChildCount() - 1);
+    Button activeTab = (Button) navigation.getChildAt(tab);
+    activeTab.setBackground(shape(INK, 10));
+    activeTab.setTextColor(0xfff4f2e9);
     ScrollView scroll = new ScrollView(this);
     body = column();
     scroll.addView(body);
@@ -312,6 +323,11 @@ public class MainActivity extends Activity {
               selected = Store.day(System.currentTimeMillis());
               render();
             }));
+    TextView heading = text(I18n.english(this) ? "YOUR DAY / FOUR RECAPS" : "我的一天 / 四时段回顾", 12, GREEN);
+    heading.setLetterSpacing(0.08f);
+    body.addView(heading);
+    body.addView(text(I18n.english(this) ? "Up to 50 characters each · Open details for the original." : "每段最多五十字 · 在详情中核对原文与原声。", 12, MUTED));
+    DayPeriodUi.render(this, selected, db.events(selected, null));
     LinearLayout hero = card();
     hero.setBackground(shape(INK, 20));
     hero.addView(
@@ -323,7 +339,7 @@ public class MainActivity extends Activity {
                 : I18n.t(MainActivity.this, "每一份日常，都值得记住"),
             20,
             0xffffffff));
-    hero.addView(text(I18n.t(MainActivity.this, "声音、照片和文字，汇成属于你的时间线。"), 13, 0xffd2ddd3));
+    hero.addView(text(I18n.english(this) ? "Audio, photos and notes. Keep the source." : "声音、照片与文字，保留每一刻的依据。", 13, 0xffd2ddd3));
     row(
         hero,
         button(
@@ -339,7 +355,6 @@ public class MainActivity extends Activity {
         button(I18n.t(MainActivity.this, "整理这一天"), this::summarize));
     new FeatureUi(this).recording(hero);
     if (busy) body.addView(text(I18n.t(MainActivity.this, "正在处理，请稍候…"), 14, GREEN));
-    DayPeriodUi.render(this, selected, db.events(selected, null));
     DayPeriodUi.tasks(this);
   }
 

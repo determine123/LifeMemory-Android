@@ -6,7 +6,7 @@
 
 本地优先的安卓生活记录：声音、照片和文字，整理为可追溯的简短回顾。
 
-[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha04/LifeMemory-v0.8.0-alpha04-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
+[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha05/LifeMemory-v0.8.0-alpha05-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
 
 Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
@@ -22,7 +22,7 @@ Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
 ## 三步开始
 
-1. 下载 **v0.8.0-alpha04 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
+1. 下载 **v0.8.0-alpha05 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
 2. 录音、添加照片或文字。离线转写需[单独导入模型](SHERPA-MODELS.md)，APK 不包含模型。
 3. 配置自己的 AI 服务生成语义回顾。DeepSeek 用于对话和总结，对话密钥不代表支持音频转写；参见[配置排查](TROUBLESHOOTING.md)。
 

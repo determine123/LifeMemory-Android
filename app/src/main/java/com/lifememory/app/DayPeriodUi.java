@@ -13,7 +13,10 @@ final class DayPeriodUi {
       List<Store.Event> events = DayPeriods.select(all, i);
       JSONObject saved = DayPeriods.saved(a, day, i);
       LinearLayout card = a.card();
-      card.addView(a.text(DayPeriods.label(a, i) + " · " + DayPeriods.RANGE[i], 20, 0xff263d34));
+      TextView title = a.text(String.format(java.util.Locale.US, "%02d / ", i + 1) + DayPeriods.label(a, i), 19, 0xff223d33);
+      title.setTypeface(null, android.graphics.Typeface.BOLD);
+      card.addView(title);
+      card.addView(a.text(DayPeriods.RANGE[i], 12, 0xff6b786f));
       String recap = saved.optString("summary");
       if (recap.isEmpty())
         recap =
