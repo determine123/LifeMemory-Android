@@ -42,6 +42,11 @@ public class MemorySearch {
           "前天", "昨天", "今天", "上周", "本周", "这周", "的时候", "告诉我", "什么", "哪些", "发生", "做了", "干了", "请问",
           "记录", "回忆", "20"
         }) cleaned = cleaned.replace(stop, " ");
+    cleaned = cleaned.replaceAll("20\\d{2}-\\d{2}-\\d{2}", " ");
+    cleaned =
+        cleaned.replaceAll(
+            "\\b(what|did|do|i|we|my|me|the|a|an|about|tell|show|find|please|happened|records|memories|was|were|in|on|at|of|to|and)\\b",
+            " ");
     Set<String> tokens = new HashSet<>();
     Matcher latin = Pattern.compile("[a-z][a-z0-9_-]{1,}").matcher(cleaned);
     while (latin.find()) tokens.add(latin.group());
@@ -50,21 +55,29 @@ public class MemorySearch {
       String term = chinese.group();
       for (int i = 0; i + 1 < term.length(); i++) tokens.add(term.substring(i, i + 2));
     }
+    if (tokens.isEmpty() && start == null) return new ArrayList<>();
     List<Store.Event> scoped = new ArrayList<>();
     Map<Long, Integer> scores = new HashMap<>();
-    int best = 0;
     for (Store.Event e : all) {
       String day = Store.day(e.time);
       if (start != null
           && (day.compareTo(start.toString()) < 0 || day.compareTo(end.toString()) > 0)) continue;
       int score = 0;
-      String text = e.text.toLowerCase(Locale.ROOT);
+      org.json.JSONObject meta = e.metadata();
+      String text =
+          (e.text
+                  + " "
+                  + meta.optString("place")
+                  + " "
+                  + meta.optString("activity")
+                  + " "
+                  + meta.optString("mood"))
+              .toLowerCase(Locale.ROOT);
       for (String token : tokens) if (text.contains(token)) score++;
       scores.put(e.id, score);
-      best = Math.max(best, score);
       scoped.add(e);
     }
-    if (best > 0) scoped.removeIf(e -> scores.get(e.id) == 0);
+    if (!tokens.isEmpty()) scoped.removeIf(e -> scores.get(e.id) == 0);
     scoped.sort(
         (a, b) -> {
           int rank = Integer.compare(scores.get(b.id), scores.get(a.id));

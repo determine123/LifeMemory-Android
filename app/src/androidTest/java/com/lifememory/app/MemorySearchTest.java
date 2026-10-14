@@ -50,4 +50,54 @@ public class MemorySearchTest {
     assertEquals(3, found.get(0).id);
     assertEquals(2, found.get(1).id);
   }
+
+  @Test
+  public void unmatchedTopicNeverFallsBackToUnrelatedHistory() {
+    List<Store.Event> all = Arrays.asList(event(1, "2026-10-13", "lunch"));
+    assertTrue(MemorySearch.select("quantum computing", all, LocalDate.of(2026, 10, 13)).isEmpty());
+    assertTrue(MemorySearch.select("今天量子计算", all, LocalDate.of(2026, 10, 13)).isEmpty());
+  }
+
+  @Test
+  public void englishDateQuestionReturnsOnlyThatDay() {
+    List<Store.Event> all =
+        Arrays.asList(event(1, "2026-10-13", "lunch"), event(2, "2026-10-12", "meeting"));
+    List<Store.Event> found =
+        MemorySearch.select("What did I do yesterday?", all, LocalDate.of(2026, 10, 13));
+    assertEquals(1, found.size());
+    assertEquals(2, found.get(0).id);
+  }
+
+  @Test
+  public void placeAndActivityAreSearchable() {
+    long time =
+        LocalDate.of(2026, 10, 13).atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    Store.Event e =
+        new Store.Event(
+            3,
+            time,
+            "context",
+            "",
+            "",
+            "ready",
+            "{\"place\":\"实验室\",\"activity\":\"project review\"}",
+            false);
+    assertEquals(
+        3, MemorySearch.select("实验室", Arrays.asList(e), LocalDate.of(2026, 10, 13)).get(0).id);
+    assertEquals(
+        3,
+        MemorySearch.select("project review", Arrays.asList(e), LocalDate.of(2026, 10, 13))
+            .get(0)
+            .id);
+  }
+
+  @Test
+  public void englishFillerWithoutTopicOrDateIsNotAHistoryDump() {
+    assertTrue(
+        MemorySearch.select(
+                "What did I do?",
+                Arrays.asList(event(1, "2026-10-13", "lunch")),
+                LocalDate.of(2026, 10, 13))
+            .isEmpty());
+  }
 }

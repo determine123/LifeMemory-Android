@@ -34,3 +34,10 @@ GitHub 部分连接不稳定，未完整下载上游所有模块；以上明确�
 
 离线语音使用 https://github.com/alphacep/vosk-api 的 Vosk Android 0.3.75 与 JNA 5.18.1。模型须自行导入，官方列表：https://alphacephei.com/vosk/models 。官方模型下载曾发生 TLS 连接失败，随后通过社区镜像获取模型完成中文合成语音的实际离线推理测试，详见 TESTING-v0.3.md；不代表真机或多人识别准确率。
 
+## Memos and repository discovery (2026-10-14)
+
+Discovery directory: https://git.hiwiki.org/zh-CN — software aggregation and download discovery only. Repository descriptions and design decisions are checked against upstream sources.
+
+Upstream product reference: https://github.com/usememos/memos . Its README describes a note timeline, keyword/date/tag retrieval and pinned notes. LifeMemory v0.8.0-alpha02 independently improves local date/topic retrieval, includes existing place/activity metadata, and adds navigation from search/AI citations to original records. No Memos source code was copied or linked; this is not a Memos client and does not require its server.
+
+Existing product references remain Omi and Memex. sherpa-onnx remains a prospective engine; it is not integrated in alpha02. Model selection, Android native packaging, resource use and real-device diarization evaluation remain required.
