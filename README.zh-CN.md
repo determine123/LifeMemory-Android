@@ -1,5 +1,12 @@
 # 拾光 · LifeMemory v0.7.0
 
+## 下载新版
+
+[下载 LifeMemory v0.7.0 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.7.0/LifeMemory-v0.7.0-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.7.0)
+
+适用于 Android 8.0 及以上，调试测试版。按提示允许浏览器安装；覆盖安装可保留原有数据，离线语音模型需另行导入。
+
+
 设置中新增“自动记录与录音机接入”。启用自动记录后，Android 8–10尝试开机恢复；Android 11及以上通过开机通知点开应用恢复。手动停止会取消自动恢复，直到重新启用。自动模式不设App自身12小时停止定时器，系统仍可能中断。
 
 可打开支持标准接口的系统录音机，或通过分享/导出音频接入。开启“转写完成后自动回顾”即可把转写文字整理为当天回顾并保存在App。未配置AI时显示本地概况，不会假造语义总结。详见 [v0.7验证与限制](TESTING-v0.7.md)。

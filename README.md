@@ -1,5 +1,12 @@
 # LifeMemory Android
 
+## Download
+
+[Download LifeMemory v0.7.0 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.7.0/LifeMemory-v0.7.0-debug.apk) · [Release notes](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.7.0)
+
+Android 8.0+. Debug beta build; allow installation from your browser when prompted. Install over the existing version to keep your data. Offline speech models are imported separately.
+
+
 [简体中文](README.zh-CN.md) · [Website](https://determine123.github.io/LifeMemory-Android/) · [中文网页](https://determine123.github.io/LifeMemory-Android/zh.html)
 
 **Keep a little of your day.** A local-first Android life journal inspired by Omi, Memex and Auday, with a processing workspace inspired by Orca. Independently implemented in native Java; not an affiliated product.
