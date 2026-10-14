@@ -24,23 +24,66 @@ public class Ai {
   }
 
   private HttpURLConnection connection(String route) throws Exception {
-    String base = prefs.getString("base", "https://api.openai.com/v1").replaceAll("/+$", "");
+    return connection(route, "POST");
+  }
+
+  static String normalizeBase(String value) throws IOException {
+    String base = value.trim().replaceAll("/+$", "");
+    for (String endpoint : new String[] {"/chat/completions", "/audio/transcriptions", "/models"})
+      if (base.endsWith(endpoint)) base = base.substring(0, base.length() - endpoint.length());
+    try {
+      URL url = new URL(base);
+      if (!url.getProtocol().equals("https")
+          || url.getHost().isEmpty()
+          || url.getUserInfo() != null
+          || url.getQuery() != null
+          || url.getRef() != null)
+        throw new IOException(
+            "Use an HTTPS base URL without credentials, query parameters or fragments /"
+                + " 请使用无凭据、查询参数或锚点的HTTPS基础地址");
+    } catch (MalformedURLException e) {
+      throw new IOException("Invalid API base URL / API地址无效");
+    }
+    return base;
+  }
+
+  static String normalizeKey(String value) throws IOException {
+    String key = value.trim();
+    if (key.regionMatches(true, 0, "Bearer ", 0, 7)) key = key.substring(7).trim();
+    if (key.isEmpty() || key.matches("(?s).*\\s.*"))
+      throw new IOException("Enter a key without spaces or line breaks / 密钥不能为空或包含空格、换行");
+    return key;
+  }
+
+  boolean deepSeek() {
+    try {
+      return new URL(normalizeBase(prefs.getString("base", "")))
+          .getHost()
+          .equalsIgnoreCase("api.deepseek.com");
+    } catch (Exception e) {
+      return false;
+    }
+  }
+
+  private HttpURLConnection connection(String route, String method) throws Exception {
+    String base = normalizeBase(prefs.getString("base", "https://api.openai.com/v1"));
     URL url = new URL(base + route);
     if (!url.getProtocol().equals("https")) throw new IOException("API 地址必须使用 HTTPS");
     HttpURLConnection c = (HttpURLConnection) url.openConnection();
     c.setInstanceFollowRedirects(false);
-    c.setRequestMethod("POST");
+    c.setRequestMethod(method);
     c.setConnectTimeout(20000);
     c.setReadTimeout(90000);
-    c.setDoOutput(true);
-    c.setRequestProperty("Authorization", "Bearer " + Secrets.get(ctx));
+    c.setDoOutput(method.equals("POST"));
+    c.setRequestProperty("Authorization", "Bearer " + normalizeKey(Secrets.get(ctx)));
     return c;
   }
 
-  private String response(HttpURLConnection c) throws Exception {
+  String response(HttpURLConnection c) throws Exception {
     try {
       int code = c.getResponseCode();
-      if (code < 200 || code >= 300) throw new IOException("AI 服务返回 HTTP " + code + "，请检查配置或稍后重试");
+      if (code < 200 || code >= 300)
+        throw new ApiFailure(ctx, code, c.getURL().getHost(), c.getURL().getPath());
       try (InputStream in = c.getInputStream();
           ByteArrayOutputStream out = new ByteArrayOutputStream()) {
         MainActivity.copy(in, out);
@@ -55,9 +98,9 @@ public class Ai {
     system +=
         I18n.english(ctx)
             ? "\n"
-                  + "Write newly generated answers, summaries and task descriptions in English."
-                  + " Preserve source quotations, names and JSON keys. Any daily recap must still"
-                  + " contain at most 50 Unicode characters including punctuation."
+                + "Write newly generated answers, summaries and task descriptions in English."
+                + " Preserve source quotations, names and JSON keys. Any daily recap must still"
+                + " contain at most 50 Unicode characters including punctuation."
             : "\n用中文生成新回答、总结和待办，保留原始引用与JSON字段名。";
     HttpURLConnection c = connection("/chat/completions");
     c.setRequestProperty("Content-Type", "application/json");
@@ -84,6 +127,12 @@ public class Ai {
   }
 
   public Transcript transcribeDetailed(File audio) throws Exception {
+    if (deepSeek())
+      throw new IOException(
+          I18n.english(ctx)
+              ? "This DeepSeek configuration is for chat. Use on-device transcription; its"
+                    + " audio/transcriptions route previously returned 404."
+              : "当前DeepSeek配置用于聊天。请使用本机转写；此前其audio/transcriptions路径实测返回404。");
     HttpURLConnection c = connection("/audio/transcriptions");
     String b = "LifeMemory" + System.nanoTime();
     c.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + b);
@@ -157,5 +206,23 @@ public class Ai {
         .getJSONObject(0)
         .getJSONObject("message")
         .getString("content");
+  }
+
+  public String testConfiguration() throws Exception {
+    JSONObject models = new JSONObject(response(connection("/models", "GET")));
+    JSONArray data = models.getJSONArray("data");
+    String selected = prefs.getString("model", "");
+    boolean found = false;
+    for (int i = 0; i < data.length(); i++)
+      if (selected.equals(data.getJSONObject(i).optString("id"))) found = true;
+    boolean en = I18n.english(ctx);
+    return (en ? "Authentication passed; /models returned HTTP 200. " : "鉴权通过，/models返回HTTP 200。")
+        + (found
+            ? (en ? "Selected chat model is listed. " : "当前对话模型在列表中。")
+            : (en ? "Selected chat model is not listed; check its name. " : "当前对话模型未在列表中，请检查名称。"))
+        + (en
+            ? "This checks authentication and the model list only; it does not test billing, chat"
+                  + " generation or audio transcription."
+            : "此测试仅验证鉴权和模型列表，不验证余额、实际生成或语音转写。");
   }
 }

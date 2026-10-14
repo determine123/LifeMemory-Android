@@ -88,7 +88,7 @@
 <string name="msg_41a85fc7" formatted="false">"\n证据：\n"</string>
 <string name="msg_03c26c2c" formatted="false">"AI 服务"</string>
 <string name="msg_f3b72884" formatted="false">"照片 OCR 与离线转写在本机完成。选择云端转写后上传音频；AI 回顾与问答发送相关文字。密钥由 Android Keystore 加密保存。"</string>
-<string name="msg_20cdce86" formatted="false">"API 地址（含 /v1）"</string>
+<string name="msg_20cdce86" formatted="false">"API基础地址（按服务商填写）"</string>
 <string name="msg_23363f4c" formatted="false">"已保存密钥；留空保留"</string>
 <string name="msg_2be92f8e" formatted="false">"对话模型"</string>
 <string name="msg_41e2e9b0" formatted="false">"语音模型"</string>
@@ -103,7 +103,7 @@
 <string name="msg_40de979f" formatted="false">"记录存放在应用私有目录。卸载会清除本地数据，请先导出备份。录音按 60 秒分段，可在时间线手动重试转写。"</string>
 <string name="msg_a55ddebc" formatted="false">"导出完整备份"</string>
 <string name="msg_9af55f71" formatted="false">"Omi × Memex × Auday · 独立实现"</string>
-<string name="msg_ed8b78e5" formatted="false">"参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.5.0\n支持 Android 8.0 及以上。"</string>
+<string name="msg_ed8b78e5" formatted="false">"参考 Omi、Memex、Auday 的生活记录，以及 Orca 的任务状态设计。当前版本：0.6.0\n支持 Android 8.0 及以上。"</string>
 <string name="msg_8d0ce986" formatted="false">"Omi 源码"</string>
 <string name="msg_dd644169" formatted="false">"Memex 源码"</string>
 <string name="msg_19471c8f" formatted="false">"请输入有效的 HTTPS API 地址"</string>

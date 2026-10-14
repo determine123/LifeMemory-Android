@@ -87,6 +87,7 @@ public class RecapWorker extends Worker {
       return Result.success();
     } catch (Exception e) {
       p.edit().putString("recap_error", e.getMessage()).apply();
+      if (e instanceof ApiFailure && !((ApiFailure) e).retryable()) return Result.failure();
       return getRunAttemptCount() < 2 ? Result.retry() : Result.failure();
     }
   }

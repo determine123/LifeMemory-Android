@@ -88,7 +88,7 @@
 <string name="msg_41a85fc7" formatted="false">"\nEvidence:\n"</string>
 <string name="msg_03c26c2c" formatted="false">"AI provider"</string>
 <string name="msg_f3b72884" formatted="false">"Photo OCR and offline transcription run on-device. Cloud transcription uploads audio; AI recaps and chat send relevant text. API keys are encrypted with Android Keystore."</string>
-<string name="msg_20cdce86" formatted="false">"API URL (include /v1)"</string>
+<string name="msg_20cdce86" formatted="false">"API base URL (provider-specific)"</string>
 <string name="msg_23363f4c" formatted="false">"Key saved; leave blank to keep it"</string>
 <string name="msg_2be92f8e" formatted="false">"Chat model"</string>
 <string name="msg_41e2e9b0" formatted="false">"Speech model"</string>
@@ -103,7 +103,7 @@
 <string name="msg_40de979f" formatted="false">"Records live in app-private storage. Uninstalling deletes local data; export a backup first. Segment length is configurable. Retry transcription from the timeline."</string>
 <string name="msg_a55ddebc" formatted="false">"Export full backup"</string>
 <string name="msg_9af55f71" formatted="false">"Inspired by Omi, Memex and Auday"</string>
-<string name="msg_ed8b78e5" formatted="false">"Inspired by Omi, Memex, Auday and Orca. Version 0.5.0\nAndroid 8.0 and later."</string>
+<string name="msg_ed8b78e5" formatted="false">"Inspired by Omi, Memex, Auday and Orca. Version 0.6.0\nAndroid 8.0 and later."</string>
 <string name="msg_8d0ce986" formatted="false">"Omi source"</string>
 <string name="msg_dd644169" formatted="false">"Memex source"</string>
 <string name="msg_19471c8f" formatted="false">"Enter a valid HTTPS API URL"</string>

@@ -61,6 +61,7 @@ public class MainActivity extends Activity {
     super.onCreate(state);
     db = new Store(this);
     CaptureService.recover(this);
+    SpeechJobs.recoverInterrupted(this);
     if (getSharedPreferences("capture", 0).getLong("last_saved", 0) == 0) {
       long latest = 0;
       for (Store.Event e : db.events(null, null))
@@ -639,7 +640,7 @@ public class MainActivity extends Activity {
 
   private void transcribe(Store.Event event) {
     if (!SpeechJobs.available(this)) {
-      message(I18n.t(MainActivity.this, "请在设置中导入离线中文模型，或启用云端转写并配置接口。"));
+      message(SpeechJobs.unavailableReason(this));
       return;
     }
     SpeechJobs.submit(this, event.id);
@@ -879,21 +880,73 @@ public class MainActivity extends Activity {
     row(
         c,
         button(
+            I18n.english(this) ? "Use DeepSeek preset" : "使用DeepSeek配置",
+            () -> {
+              p.edit()
+                  .putString("base", "https://api.deepseek.com")
+                  .putString("model", "deepseek-flash")
+                  .putString("vision", "deepseek-flash")
+                  .apply();
+              getSharedPreferences("life", 0)
+                  .edit()
+                  .putString("asr_mode", "local")
+                  .remove("asr_blocked")
+                  .apply();
+              message(
+                  I18n.english(this)
+                      ? "DeepSeek chat configured; transcription set to on-device. Enter this"
+                            + " provider’s key and save. Import the Chinese model if needed."
+                      : "已配置DeepSeek聊天，转写设为本机。请填写该服务商的密钥并保存；本机转写需导入中文模型。");
+              render();
+            }),
+        button(
+            I18n.english(this) ? "Test saved settings" : "测试已保存的配置",
+            () -> {
+              if (busy) return;
+              busy = true;
+              worker.submit(
+                  () -> {
+                    String result;
+                    try {
+                      result = new Ai(this).testConfiguration();
+                    } catch (Exception e) {
+                      result = e.getMessage();
+                    }
+                    final String message = result;
+                    runOnUiThread(
+                        () -> {
+                          busy = false;
+                          message(message);
+                        });
+                  });
+            }));
+    c.addView(
+        text(
+            I18n.english(this)
+                ? "The test sends your key to the saved provider’s /models endpoint; no personal"
+                      + " records or audio are sent. Save edits before testing."
+                : "测试仅向已保存的服务商/models接口发送密钥，不发送私人记录或录音。修改后先保存再测试。",
+            12,
+            MUTED));
+    row(
+        c,
+        button(
             I18n.t(MainActivity.this, "保存设置"),
             () -> {
               try {
-                URLCheck(base.getText().toString().trim());
+                String normalized = Ai.normalizeBase(base.getText().toString());
                 if (model.getText().toString().trim().isEmpty()
                     || asr.getText().toString().trim().isEmpty())
                   throw new IOException(I18n.t(MainActivity.this, "请填写模型名称"));
                 if (!key.getText().toString().trim().isEmpty())
                   Secrets.set(this, key.getText().toString().trim());
                 p.edit()
-                    .putString("base", base.getText().toString().trim())
+                    .putString("base", normalized)
                     .putString("model", model.getText().toString().trim())
                     .putString("asr", asr.getText().toString().trim())
                     .putString("vision", vision.getText().toString().trim())
                     .apply();
+                getSharedPreferences("life", 0).edit().remove("asr_blocked").apply();
                 message(I18n.t(MainActivity.this, "已保存"));
                 render();
               } catch (Exception e) {

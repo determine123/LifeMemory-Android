@@ -45,7 +45,7 @@ class FeatureUi {
             I18n.t(a, "待转写"),
             () -> {
               if (!SpeechJobs.available(a)) {
-                a.message(I18n.t(a, "请在设置中导入离线模型，或选择云端转写并配置接口。"));
+                a.message(SpeechJobs.unavailableReason(a));
                 return;
               }
               int count = SpeechJobs.retry(a);
@@ -277,6 +277,15 @@ class FeatureUi {
   void settings() {
     android.content.SharedPreferences prefs = a.getSharedPreferences("life", 0);
     LinearLayout c = a.card();
+    if (prefs.getBoolean("asr_blocked", false))
+      c.addView(
+          a.text(
+              I18n.english(a)
+                  ? "Cloud queue paused after an authentication/access failure. Correct and save"
+                        + " API settings before retrying. On-device transcription is unaffected."
+                  : "云端队列因鉴权或权限失败暂停。请修正并保存API配置后重试；本机转写不受影响。",
+              14,
+              0xff985e42));
     c.addView(a.text(I18n.t(a, "本地语音与录音"), 21, 0xff263d34));
     c.addView(
         a.text(
@@ -298,6 +307,14 @@ class FeatureUi {
                     .setItems(
                         new String[] {I18n.t(a, "本机离线（不上传音频）"), I18n.t(a, "云端接口（上传音频）")},
                         (d, which) -> {
+                          if (which == 1 && new Ai(a).deepSeek()) {
+                            a.message(
+                                I18n.english(a)
+                                    ? "Use on-device transcription with this DeepSeek chat"
+                                          + " configuration. Import the Chinese model first."
+                                    : "当前DeepSeek聊天配置请配合本机转写，先导入中文模型。");
+                            return;
+                          }
                           if (which == 1)
                             new AlertDialog.Builder(a)
                                 .setTitle(I18n.t(a, "启用云端转写"))

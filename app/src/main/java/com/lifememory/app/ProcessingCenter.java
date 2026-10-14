@@ -120,7 +120,7 @@ class ProcessingCenter {
                       I18n.t(a, "重试这段"),
                       () -> {
                         if (!SpeechJobs.available(a)) {
-                          a.message(I18n.t(a, "请先在设置中导入模型或配置云端转写。"));
+                          a.message(SpeechJobs.unavailableReason(a));
                           return;
                         }
                         SpeechJobs.submit(a, e.id);

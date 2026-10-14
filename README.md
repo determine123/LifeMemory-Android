@@ -6,7 +6,11 @@
 
 ## Language
 
-Version **0.5.0** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition currently uses an imported Chinese Vosk model.
+Version **0.6.0** opens in **English by default**, including on Chinese-language devices. The language button at the top switches between English and Simplified Chinese and saves your choice. Existing records, transcripts and speaker names keep their original language. New AI answers follow your selected language. Daily recaps still have a maximum of **50 Unicode characters**, including punctuation. Offline speech recognition currently uses an imported Chinese Vosk model.
+
+## DeepSeek and authentication fixes
+
+Settings now includes a DeepSeek chat preset and a saved-configuration `/models` test. HTTP errors distinguish authentication, balance, permissions, missing endpoints and rate limits. Cloud transcription pauses on 401/403; interrupted processing flags recover without deleting records. See [step-by-step troubleshooting](TROUBLESHOOTING.md). DeepSeek chat is paired with on-device transcription; a working chat key does not imply a working audio endpoint.
 
 ## Features
 
@@ -46,6 +50,6 @@ Speaker labels are manual; automatic multi-speaker separation is not validated. 
 
 ## Validation and license
 
-Latest report: [v0.5 — 31 device tests](TESTING-v0.5.md). Previous reports: [v0.4](TESTING-v0.4.md), [v0.3](TESTING-v0.3.md). Website checks: `node docs/check.mjs`. Tests use synthetic speech and emulator fixtures, not proof of real-world accuracy.
+Latest report: [v0.6 — 34 device tests](TESTING-v0.6.md). Previous reports: [v0.5](TESTING-v0.5.md), [v0.4](TESTING-v0.4.md), [v0.3](TESTING-v0.3.md). Website checks: `node docs/check.mjs`. Tests use synthetic speech and emulator fixtures, not proof of real-world accuracy.
 
 Original code: [MIT](LICENSE). [Third-party notices](THIRD_PARTY_NOTICES.md) · [Reference scope](reference-notes/SOURCES.md).

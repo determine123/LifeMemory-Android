@@ -25,6 +25,7 @@ public class Secrets {
   }
 
   public static void set(Context c, String value) throws Exception {
+    value = Ai.normalizeKey(value);
     Cipher a = Cipher.getInstance("AES/GCM/NoPadding");
     a.init(Cipher.ENCRYPT_MODE, key());
     c.getSharedPreferences("ai", 0)

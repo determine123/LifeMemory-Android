@@ -1,4 +1,6 @@
-# 拾光 · LifeMemory v0.5.0
+# 拾光 · LifeMemory v0.6.0
+
+新版新增DeepSeek一键配置、已保存配置测试、HTTP错误分类、鉴权失败暂停云端队列及中断转写状态恢复。详见 [逐步排查说明](TROUBLESHOOTING.md)。
 
 [English](README.md) · [英文宣传网页](https://determine123.github.io/LifeMemory-Android/) · [中文宣传网页](https://determine123.github.io/LifeMemory-Android/zh.html)
 
