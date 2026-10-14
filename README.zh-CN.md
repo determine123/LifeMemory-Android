@@ -1,110 +1,68 @@
-# 拾光 · LifeMemory v0.8.0-alpha04
+<div align="center">
 
-## 下载新版
+# 拾光 LifeMemory
 
-[下载 LifeMemory v0.8.0-alpha04 APK](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha04/LifeMemory-v0.8.0-alpha04-debug.apk) · [版本说明](https://github.com/determine123/LifeMemory-Android/releases/tag/v0.8.0-alpha04)
+**一天，四次回顾。每一刻，有迹可循。**
 
-适用于 Android 8.0 及以上，调试测试版。按提示允许浏览器安装；覆盖安装可保留原有数据，离线语音模型需另行导入。
+本地优先的安卓生活记录：声音、照片和文字，整理为可追溯的简短回顾。
 
+[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha04/LifeMemory-v0.8.0-alpha04-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
 
-设置中新增“自动记录与录音机接入”。启用自动记录后，Android 8–10尝试开机恢复；Android 11及以上通过开机通知点开应用恢复。手动停止会取消自动恢复，直到重新启用。自动模式不设App自身12小时停止定时器，系统仍可能中断。
+Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
-可打开支持标准接口的系统录音机，或通过分享/导出音频接入。开启“转写完成后自动回顾”即可把转写文字整理为当天回顾并保存在App。未配置AI时显示本地概况，不会假造语义总结。详见 [v0.7验证与限制](TESTING-v0.7.md)。
+</div>
 
-新版新增DeepSeek一键配置、已保存配置测试、HTTP错误分类、鉴权失败暂停云端队列及中断转写状态恢复。详见 [逐步排查说明](TROUBLESHOOTING.md)。
+## 为什么使用拾光
 
-[English](README.md) · [英文宣传网页](https://determine123.github.io/LifeMemory-Android/) · [中文宣传网页](https://determine123.github.io/LifeMemory-Android/zh.html)
+- **四时段回顾。** 早上 00–11、中午 11–14、下午 14–18、晚上 18–24，每段最多五十个 Unicode 字符（含标点）。分钟录音放在时段详情，首页直接看概览。
+- **回忆有依据。** 事件和待办可返回原文或原声，支持拖动回听、倍速和手动纠正说话人。
+- **本机转写，自选 AI。** 导入 Vosk 中文或可选 sherpa-onnx SenseVoice 与说话人模型；语义回顾使用自己配置的兼容接口。
+- **处理进度可见。** 查看等待、进行、失败、已完成记录，按条重试。
+- **保留与恢复。** 保护重要录音，搜索历史转写，按主题回看，导入 ZIP 备份并合并记录和附件。
 
-## 默认英文与中文切换
+## 三步开始
 
-App默认使用英文，不跟随系统语言自动切换；顶部语言按钮可切换简体中文，选择会保存。首页、处理中心、设置、弹窗、播放器与通知支持双语。原有记录、转写和说话人名称不会自动翻译；新的AI回答按所选语言生成，每日概览仍最多50个Unicode字符（含标点）。离线转写支持中文Vosk和可选的多语言SenseVoice，详见[模型配置](SHERPA-MODELS.md)。
+1. 下载 **v0.8.0-alpha04 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
+2. 录音、添加照片或文字。离线转写需[单独导入模型](SHERPA-MODELS.md)，APK 不包含模型。
+3. 配置自己的 AI 服务生成语义回顾。DeepSeek 用于对话和总结，对话密钥不代表支持音频转写；参见[配置排查](TROUBLESHOOTING.md)。
 
-参考 Omi 的语音记忆、Memex 的本地多模态时间线和 Auday 的重要时刻/每日回顾思路，独立实现的原生 Android 应用。无需账号或自建后端，最低 Android 8.0。
+每个时段结束后自动整理，安卓可能延迟后台任务；也可手动更新一个时段或全天四段。未配置 AI 时显示真实记录数量。
 
-## 安装
+## 记录 → 转写 → 回顾
 
-本地构建包为 `dist/LifeMemory-v0.8.0-alpha04-debug.apk`，未提交至源码仓库。可以覆盖旧版升级；不要先卸载，以免清除本地数据。自行构建见下方说明。
+前台通知录音，支持暂停、继续、重要标记和 1 / 3 / 5 分钟分段保存。可导入或分享系统录音机导出的音频。自动记录需主动启用，手动停止会关闭自动模式；新版安卓重启后需打开应用恢复，系统后台限制可能中断录音。
 
-## v0.4 处理中心与宣传网页
+可选 sherpa-onnx 在独立语音进程运行。说话人编号只对应当前录音，不是身份识别；自动人数可能过度分离，可指定人数或手动纠正。支持本地中文 OCR，地点、活动与心情为手动填写。
 
-- 借鉴 Orca 的任务状态工作台，时间线新增“处理中心”：按当天查看待转写、转写中、需处理及已完成录音，实时更新状态。
-- 支持失败原因查看、完成/异常筛选、单段重试及转写回听。失败重试保留原有转写；转写中优先显示进行状态。
-- 修正录音说明，明确默认离线转写，主动启用云端才上传音频。
-- 宣传网页源码在 [docs/index.html](docs/index.html)，功能示意可切换，支持响应式布局。公开托管说明见 [网页说明](docs/README.md)。
+## 数据与隐私
 
-## v0.3 每日50字概览
+记录和离线模型保存在应用私有目录。云端转写发送音频，AI 回顾与问答发送相关文字，视觉分析发送所选照片；离线失败不会偷偷切换云端。密钥使用 Android Keystore 加密，数据库没有额外应用层加密，导出 ZIP 为明文。时段概览缓存可在恢复后重新生成。
 
-- 点击“整理这一天”或启用晚间自动回顾：AI以35至50字概括主要经历，最多50个Unicode字符（含标点），记录少时不凑字数。
-- 首页显示简短概览，点击“查看回顾与原始记录”展开依据；待办继续独立显示。旧版长回顾保留原文，首页只显示短预览，重新整理后生成新格式。
-- AI输出超长时优先保留完整句，否则显示省略号。没有AI接口时只显示本地记录统计，不伪造语义总结；待转写录音明确提示。
-- 原始音频、转写与照片不因缩短概览而删除。展开与AI上下文仍受现有300条及文字长度限制。
+## 验证状态
 
-## 已有功能
+当前版本 **61 项模拟器测试通过**，lint 为 0 错误、16 警告，参见[验证报告](TESTING-v0.8-alpha04.md)。小米 13 Ultra USB 真机、真实噪声准确率、耗电与厂商后台限制仍待验证，不保证全天无间断录音。
 
-- 录音状态、会话计时、最近保存时间和转写队列；录音支持暂停、继续、通知栏停止和标记此刻。分段可选 1/3/5 分钟，连续会话最长 12 小时。
-- 默认采用本机离线转写，需先导入 Vosk 小型中文模型 ZIP。云端转写需要主动启用并配置接口，不会在本机转写失败时偷偷回退到云端。
-- 转写段落保留时间戳，点击定位回听；播放器有拖动进度、暂停/继续与倍速选项。
-- 长按转写段落标注说话人。支持解析兼容云端服务返回的说话人字段；跨片段 A/B 标签不保证同一身份，尚无自动识别佩戴者声纹功能。
-- 重要时刻可关联录音内的位置；重要录音及标记关联的原音频不会被保留期限清理。
-- 手动记录地点、活动、心情，供每日回顾使用。没有虚构手表心率、压力或健康数据。
-- 开启晚间自动回顾后，系统后台任务整理当天并通知。支持温暖日记、工作复盘和简洁事实风格。无 AI 配置时生成本地回顾；有配置时发送文字与相关上下文。
-- 原始音频可永久保留，或按 7/30/90 天自动清理；保留转写文字及重要音频。默认永久保留。实验性静音过滤默认关闭，简单音量阈值可能误删安静讲话。
-- 异常结束后尝试找回原文件，明确显示中断状态；没有完整写入的文件可能不能回听或转写，不保证恢复全部音频。
-- 新增记录或修改转写后提示旧回顾待更新；旧数据库自动迁移，按日期读取时间线使用时间范围查询。
+## 构建与宣传网页
 
-原有文字、照片/相机输入、中文本地 OCR、可选视觉理解、历史检索、AI 记忆问答、待办和 ZIP 备份仍可使用。备份格式 v2 包含转写段落、说话人标签和重要时刻信息；尚无备份导入。
-
-## 转写与说话人标注
-
-详见 [测试与实机操作指南](TESTING-v0.2.md)。离线模型从 [Vosk 官方模型页](https://alphacephei.com/vosk/models) 下载 `vosk-model-small-cn-0.22.zip`，约 42 MB，保持原 ZIP 在设置中导入。当前安装包不包含模型。
-
-云端接口须兼容 `/audio/transcriptions`，默认请求 `verbose_json`。模型名称含 `diarize` 时请求 `diarized_json` 和自动分块。接口不支持这些格式时会报错并保留原音频、既有转写。聊天和图片接口分别要求 `/chat/completions` 与视觉模型支持；API Key 使用 Android Keystore 加密保存。
-
-## 测试结果与边界
-
-Android 8.0 模拟器 **28 项设备测试通过**，包含50字概览边界、实际说话人标注界面、再次编辑、转写定位回听、播放暂停/继续、数据库升级与保留策略。最新结果见 [v0.3测试记录](TESTING-v0.3.md)，原始结果见 `test-results/instrumentation-v0.3.txt`。
-
-已使用兼容中文模型完成 14.7 秒中文合成语音的 AAC 编码、解码和本机推理测试，输出 3 个带时间戳的段落。另有固定文本验证说话人手工标注与回听。DeepSeek 音频转写路径实测返回 404，不可用于当前云端 ASR 配置。未验证真人噪声环境的识别准确率或自动多人分离。测试模型和详细结果见 TESTING-v0.2.md。
-
-真实手机音质、长时耗电、厂商后台限制与 Android 15 的运行兼容性仍需验证。晚间任务由 WorkManager 调度，可能因省电策略延迟，不保证整点执行。照片 OCR 在本机；云端语音、视觉理解与 AI 文字功能会按所选方式发送数据。数据库在应用私有目录，未做应用级加密；导出的 ZIP 是明文，请自行保管。
-
-## 构建
-
-安装 JDK 17 和 Android SDK（Platform 35、Build Tools 35.0.0），配置 `ANDROID_HOME`，或在项目根目录创建未提交的 `local.properties` 并设置 `sdk.dir`。在 Android Studio 打开项目，或执行 `./gradlew assembleDebug lintDebug`（Windows 使用 `gradlew.bat`）。输出为 `app/build/outputs/apk/debug/app-debug.apk`。
-
-## 开源许可
-
-原创代码采用 [MIT](LICENSE)，第三方依赖见 [许可说明](THIRD_PARTY_NOTICES.md)。此项目为安卓测试版；API密钥请在应用内配置，勿提交到仓库。
-
-需要 JDK 17、Android SDK/Build Tools 35、Gradle 8.9、AGP 8.7.3。在 Android Studio 打开根目录并设置本机 `local.properties` 的 `sdk.dir`。
+需要 JDK 17、Android SDK 35、Build Tools 35.0.0、Gradle 8.9、AGP 8.7.3。设置 `ANDROID_HOME` 或未跟踪的 `local.properties`：
 
 ```powershell
-.\build.ps1
-# 或
-.\gradlew.bat assembleDebug lintDebug assembleDebugAndroidTest
-# 已启动测试模拟器后
-.\test-device.ps1 -Serial emulator-5554
+./fetch-dependencies.ps1
+./gradlew.bat assembleDebug lintDebug assembleDebugAndroidTest
 ```
 
-具体来源见 [SOURCES.md](reference-notes/SOURCES.md)。这是开发测试版 APK，未进行应用商店发布或正式签名验收。
+APK 位于 `app/build/outputs/apk/debug/app-debug.apk`。不要提交密钥或私人录音。
 
-## 联系与交流
+中英文宣传页随项目附在 [docs/](docs/README.md)，默认英文。`python -m http.server 8767 --directory docs` 可预览，`node docs/check.mjs` 检查交互；GitHub Pages 使用 `main /docs`。网页演示记录为虚构。
 
-遇到问题欢迎[提交 Issue](https://github.com/determine123/LifeMemory-Android/issues) 或[提交 PR](https://github.com/determine123/LifeMemory-Android/pulls)，也可以邮件联系开发者：[determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn)。
+## 联系与参与
 
-欢迎关注 [B 站主页](https://space.bilibili.com/1553355526)，了解项目进展与使用演示。
+[提交 Issue](https://github.com/determine123/LifeMemory-Android/issues) · [贡献 PR](https://github.com/determine123/LifeMemory-Android/pulls) · [determine@sjtu.edu.cn](mailto:determine@sjtu.edu.cn)
 
-抖音号：**ltm1524001843**，在抖音搜索该账号即可关注 determine。
+[B 站](https://space.bilibili.com/1553355526) · 抖音号 **ltm1524001843**（搜索关注）。
 
-## v0.8.0-alpha04 三阶段集成
+## 参考与许可
 
-- 可选sherpa-onnx SenseVoice转写及说话人分离，独立进程运行；支持自动估计或指定2–8人，长按片段手动纠正。
-- 五十字回顾下展示带来源的事件，待办可打开原始文字或回听音频；旧回顾重新生成后可获得链接。
-- 给记录添加主题，跨日期回顾并搜索历史转写。
-- 合并导入v2/v3备份，重映射来源链接，重复导入同一份备份跳过记录；文件校验或数据错误时回滚，保留现有日记。
+原生 Java 独立实现。生活记录流程参考 Omi、Memex、Auday，处理进度参考 Orca；本次项目介绍参考 [Tether](https://github.com/tt-11-dd/tether-ai) 的产品说明结构和本地/云端选择表述。无关联关系，不包含其编程 Agent 功能。
 
-模型不包含在APK中，需要另行导入，见[模型配置](SHERPA-MODELS.md)。自动分离可能过度区分说话人，不代表真实身份识别。测试与限制见[新版报告](TESTING-v0.8-alpha03.md)。构建前运行 `./fetch-dependencies.ps1` 获取并校验语音运行库。
-
-## 四时段时间线
-
-首页按早上00–11、中午11–14、下午14–18、晚上18–24展示四张回顾卡，每段概览最多50字。原始分钟录音保留在时段详情，可查看转写、回听和编辑。默认在时段结束后自动整理，安卓可能延迟执行；也可手动整理一段或全天四段。未配置AI时显示记录概况，不编造内容。时段缓存可在恢复备份后重新生成，原始记录和待办仍参与备份。[验证报告](TESTING-v0.8-alpha04.md)。
+[MIT](LICENSE) · [第三方声明](THIRD_PARTY_NOTICES.md) · [参考范围](reference-notes/SOURCES.md)
