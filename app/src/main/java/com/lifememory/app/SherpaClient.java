@@ -79,6 +79,8 @@ final class SherpaClient {
     b.putString("model", root.getAbsolutePath());
     b.putString("audio", file.getAbsolutePath());
     b.putInt("speakers", c.getSharedPreferences("life", 0).getInt("speaker_count", -1));
+    b.putString("language", c.getSharedPreferences("life", 0).getString("speech_language", "auto"));
+    b.putBoolean("normalize_text", c.getSharedPreferences("life", 0).getBoolean("speech_itn", true));
     b.putString("diar_model", diar ? d.getAbsolutePath() : "");
     JSONObject j = request(c, 1, b);
     return new Transcript(

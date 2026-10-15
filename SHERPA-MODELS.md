@@ -18,3 +18,7 @@ Official references:
 - https://github.com/k2-fsa/sherpa-onnx/releases/tag/speaker-recongition-models
 
 Models are downloaded separately and subject to their respective upstream licenses. The helper preserves the SenseVoice archive LICENSE; do not assume the application's MIT license applies to models.
+
+## SenseVoice recognition options (alpha09)
+
+Settings → Speech language selects Auto, Mandarin, English, Cantonese, Japanese or Korean. This is independent of the interface language. Choose Auto for mixed-language recordings. The ITN checkbox controls number-expression normalization; default is on. Both are passed to the isolated speech process for each request and apply only to new SenseVoice transcription/retranscription. Existing text is not rewritten. Neither setting performs translation or changes Vosk/cloud recognition. Accuracy for each language still requires recordings for evaluation.

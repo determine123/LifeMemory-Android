@@ -69,10 +69,14 @@ final class SherpaAsr {
   }
 
   static OfflineRecognizer recognizer(File root) {
+    return recognizer(root, new SpeechOptions("auto", true));
+  }
+
+  static OfflineRecognizer recognizer(File root, SpeechOptions options) {
     OfflineSenseVoiceModelConfig sv = new OfflineSenseVoiceModelConfig();
     sv.setModel(modelFile(root).getAbsolutePath());
-    sv.setLanguage("auto");
-    sv.setUseInverseTextNormalization(true);
+    sv.setLanguage(options.language);
+    sv.setUseInverseTextNormalization(options.normalizeText);
     OfflineModelConfig model = new OfflineModelConfig();
     model.setSenseVoice(sv);
     model.setTokens(new File(root, "tokens.txt").getAbsolutePath());
@@ -112,6 +116,11 @@ final class SherpaAsr {
   }
 
   static Transcript run(File root, File diarRoot, File file, int speakers) throws Exception {
+    return run(root, diarRoot, file, speakers, new SpeechOptions("auto", true));
+  }
+
+  static Transcript run(File root, File diarRoot, File file, int speakers, SpeechOptions options)
+      throws Exception {
     float[] samples = PcmAudio.read(file);
     JSONArray parts = new JSONArray();
     StringBuilder text = new StringBuilder();
@@ -130,7 +139,7 @@ final class SherpaAsr {
       }
     } else turns.add(new float[] {0, samples.length / 16000f, -1});
     turns.sort((a, b) -> Float.compare(a[0], b[0]));
-    OfflineRecognizer recognizer = recognizer(root);
+    OfflineRecognizer recognizer = recognizer(root, options);
     try {
       for (float[] turn : turns) {
         // Keep exact sample bounds without a float seconds round-trip for whole recordings.

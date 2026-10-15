@@ -28,7 +28,9 @@ public class SherpaService extends Service {
                         String dp = data.getString("diar_model", "");
                         File diar = dp.isEmpty() ? null : privatePath(dp, "sherpa-models");
                         Transcript t =
-                            SherpaAsr.run(root, diar, audio, data.getInt("speakers", -1));
+                            SherpaAsr.run(root, diar, audio, data.getInt("speakers", -1),
+                                new SpeechOptions(data.getString("language", "auto"),
+                                    data.getBoolean("normalize_text", true)));
                         json =
                             new JSONObject()
                                 .put("text", t.text)

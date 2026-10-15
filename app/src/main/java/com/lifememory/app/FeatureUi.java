@@ -495,6 +495,32 @@ class FeatureUi {
                         .setType("application/zip")
                         .addCategory(Intent.CATEGORY_OPENABLE),
                     42)));
+    c.addView(a.button(
+        (I18n.english(a) ? "Speech language: " : "录音识别语言：")
+            + SpeechOptions.label(prefs.getString("speech_language", "auto"), I18n.english(a)),
+        () -> {
+          String[] labels = new String[SpeechOptions.LANGUAGES.length];
+          for (int n = 0; n < labels.length; n++)
+            labels[n] = SpeechOptions.label(SpeechOptions.LANGUAGES[n], I18n.english(a));
+          String saved = new SpeechOptions(prefs.getString("speech_language", "auto"), true).language;
+          new AlertDialog.Builder(a)
+              .setTitle(I18n.english(a) ? "SenseVoice language" : "SenseVoice 识别语言")
+              .setSingleChoiceItems(labels, java.util.Arrays.asList(SpeechOptions.LANGUAGES).indexOf(saved),
+                  (dialog, which) -> {
+                    prefs.edit().putString("speech_language", SpeechOptions.LANGUAGES[which]).apply();
+                    dialog.dismiss();
+                    a.render();
+                  }).setNegativeButton(I18n.english(a) ? "Cancel" : "取消", null).show();
+        }));
+    CheckBox normalization = new CheckBox(a);
+    normalization.setText(I18n.english(a)
+        ? "SenseVoice: normalize number expressions (ITN)" : "SenseVoice：数字表达规范化（ITN）");
+    normalization.setChecked(prefs.getBoolean("speech_itn", true));
+    normalization.setOnCheckedChangeListener((v, on) -> prefs.edit().putBoolean("speech_itn", on).apply());
+    c.addView(normalization);
+    c.addView(a.text(I18n.english(a)
+        ? "SenseVoice only. Use Auto for mixed speech. Does not translate or change existing transcripts; retranscribe to apply."
+        : "仅适用于 SenseVoice。混合语言建议选自动；不会翻译或改写已有转写，重新转写后生效。", 12, 0xff788278));
     CheckBox diar = new CheckBox(a);
     diar.setText(
         I18n.english(a) ? "Automatic speaker separation (sherpa only)" : "自动说话人分离（仅sherpa引擎）");
