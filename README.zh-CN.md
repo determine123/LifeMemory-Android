@@ -6,7 +6,7 @@
 
 本地优先的安卓生活记录：声音、照片和文字，整理为可追溯的简短回顾。
 
-[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha09/LifeMemory-v0.8.0-alpha09-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
+[下载安卓测试版](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha10/LifeMemory-v0.8.0-alpha10-debug.apk) · [中文官网](https://determine123.github.io/LifeMemory-Android/zh.html) · [English](README.md)
 
 Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
@@ -22,7 +22,7 @@ Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
 ## 三步开始
 
-1. 下载 **v0.8.0-alpha09 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
+1. 下载 **v0.8.0-alpha10 调试预发布版**。已有版本请覆盖安装，保留数据。应用默认英文，可切换中文并记住选择。
 2. 录音、添加照片或文字。离线转写需[单独导入模型](SHERPA-MODELS.md)，APK 不包含模型。
 3. 配置自己的 AI 服务生成语义回顾。DeepSeek 用于对话和总结，对话密钥不代表支持音频转写；参见[配置排查](TROUBLESHOOTING.md)。
 
@@ -40,7 +40,7 @@ Android 8.0+ · 原生 Java · MIT 开源 · 使用自己的 AI 服务
 
 ## 验证状态
 
-当前版本 **11 项 JVM 配置与分段测试通过**；原生模型与设备回归待完成，参见[最新验证报告](TESTING-v0.8-alpha09.md)。上一版 alpha04 全套 61 项测试通过。小米 13 Ultra USB 真机、真实噪声准确率、耗电与厂商后台限制仍待验证，不保证全天无间断录音。
+当前版本 **16 项 JVM 配置与分段测试通过**；原生模型与设备回归待完成，参见[最新验证报告](TESTING-v0.8-alpha10.md)。上一版 alpha04 全套 61 项测试通过。小米 13 Ultra USB 真机、真实噪声准确率、耗电与厂商后台限制仍待验证，不保证全天无间断录音。
 
 ## 构建与宣传网页
 
@@ -71,6 +71,8 @@ APK 位于 `app/build/outputs/apk/debug/app-debug.apk`。不要提交密钥或�
 
 [项目筛选与落地说明](reference-notes/PROJECTS-2026-10-14.md)。搜索支持 `type:audio`、`topic:工作`、`pinned:true`、`period:evening`、具体日期与“昨天晚上”等时段表达。
 
-源码已加入 SenseVoice 停顿分段，7 项 JVM 算法测试通过；alpha09 APK 包含本次改动，原生模型与设备回归待完成。 [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)
+源码已加入 SenseVoice 停顿分段，7 项 JVM 算法测试通过；alpha10 APK 包含本次改动，原生模型与设备回归待完成。 [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)
 
 SenseVoice 设置新增独立的录音识别语言（自动、普通话、英语、粤语、日语、韩语）及数字表达规范化 ITN 开关。混合语言建议自动，重新转写后生效；不影响 Vosk/云端转写，也不会翻译录音。
+
+AI 配置修复：DeepSeek 预设保留已输入密钥；“保存并测试”先保存当前表单，再验证模型列表与简短示例生成。切换服务商需填写对应密钥；401 仍需有效凭据。公开 APK 不含个人密钥。

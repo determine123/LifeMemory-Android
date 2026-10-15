@@ -6,7 +6,7 @@
 
 A local-first Android journal for audio, photos and notes — with short recaps you can trace back to the source.
 
-[Download Android beta](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha09/LifeMemory-v0.8.0-alpha09-debug.apk) · [Website](https://determine123.github.io/LifeMemory-Android/) · [简体中文](README.zh-CN.md)
+[Download Android beta](https://github.com/determine123/LifeMemory-Android/releases/download/v0.8.0-alpha10/LifeMemory-v0.8.0-alpha10-debug.apk) · [Website](https://determine123.github.io/LifeMemory-Android/) · [简体中文](README.zh-CN.md)
 
 Android 8.0+ · Native Java · MIT · Bring your own AI provider
 
@@ -22,7 +22,7 @@ Android 8.0+ · Native Java · MIT · Bring your own AI provider
 
 ## Start in three steps
 
-1. Download **v0.8.0-alpha09** above. This is a **debug pre-release**. Install over your existing version to retain data. The app defaults to English and remembers your English/Chinese choice.
+1. Download **v0.8.0-alpha10** above. This is a **debug pre-release**. Install over your existing version to retain data. The app defaults to English and remembers your English/Chinese choice.
 2. Record a moment, add a photo or write a note. For offline speech, [import the required models](SHERPA-MODELS.md); they are not bundled with the APK.
 3. Configure your own AI provider for semantic recaps. DeepSeek is supported for chat and summaries; its chat key does not provide audio transcription. See [configuration troubleshooting](TROUBLESHOOTING.md).
 
@@ -40,7 +40,7 @@ Records and offline models stay in app-private storage. Cloud transcription send
 
 ## Validation
 
-**11 JVM configuration/segmentation tests passed** for v0.8.0-alpha09; native-model/device regression is pending. [Latest validation](TESTING-v0.8-alpha09.md). The previous alpha04 full suite passed 61 tests. Xiaomi 13 Ultra USB tests, real-world speech accuracy, battery use and vendor background behavior remain pending. Test results do not guarantee uninterrupted all-day recording.
+**16 JVM validation/segmentation tests passed** for v0.8.0-alpha10; native-model/device regression is pending. [Latest validation](TESTING-v0.8-alpha10.md). The previous alpha04 full suite passed 61 tests. Xiaomi 13 Ultra USB tests, real-world speech accuracy, battery use and vendor background behavior remain pending. Test results do not guarantee uninterrupted all-day recording.
 
 ## Build and website
 
@@ -71,6 +71,8 @@ Independently implemented in native Java. Omi, Memex and Auday informed the life
 
 [Reference choices and implementation](reference-notes/PROJECTS-2026-10-14.md). Search supports `type:audio`, `topic:work`, `pinned:true`, `period:evening`, exact dates and dated periods such as `yesterday evening`.
 
-Pause-aware SenseVoice chunking is implemented in source; seven JVM algorithm tests passed. The alpha09 APK includes this change; native-model/device regression is pending. [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)
+Pause-aware SenseVoice chunking is implemented in source; seven JVM algorithm tests passed. The alpha10 APK includes this change; native-model/device regression is pending. [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)
 
 SenseVoice settings now include an independent speech language (Auto, Mandarin, English, Cantonese, Japanese, Korean) and an ITN number-expression normalization toggle. Use Auto for mixed speech; retranscribe to apply. These settings do not change Vosk/cloud transcription or translate audio.
+
+AI setup: the DeepSeek preset keeps typed keys. Save and test saves the current form and checks both /models and a short synthetic chat. Changing provider requires its key; a 401 still requires valid credentials. No owner credential is included in the public APK.

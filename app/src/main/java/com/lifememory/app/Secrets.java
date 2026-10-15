@@ -25,19 +25,18 @@ public class Secrets {
   }
 
   public static void set(Context c, String value) throws Exception {
+    c.getSharedPreferences("ai", 0).edit().putString("secret", encrypt(value)).apply();
+  }
+
+  static String encrypt(String value) throws Exception {
     value = Ai.normalizeKey(value);
     Cipher a = Cipher.getInstance("AES/GCM/NoPadding");
     a.init(Cipher.ENCRYPT_MODE, key());
-    c.getSharedPreferences("ai", 0)
-        .edit()
-        .putString(
-            "secret",
-            Base64.encodeToString(a.getIV(), Base64.NO_WRAP)
+    return Base64.encodeToString(a.getIV(), Base64.NO_WRAP)
                 + ":"
                 + Base64.encodeToString(
                     a.doFinal(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)),
-                    Base64.NO_WRAP))
-        .apply();
+                    Base64.NO_WRAP);
   }
 
   public static String get(Context c) throws Exception {

@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 
   protected void onCreate(Bundle state) {
     super.onCreate(state);
+    PersonalAiSetup.apply(this);
     db = new Store(this);
     CaptureService.recover(this);
     SpeechJobs.recoverInterrupted(this);
@@ -1039,6 +1040,10 @@ public class MainActivity extends Activity {
     SharedPreferences p = getSharedPreferences("ai", 0);
     LinearLayout c = card();
     c.addView(text(I18n.t(MainActivity.this, "AI 服务"), 21, INK));
+    if (p.getBoolean("personal_setup_error", false))
+      c.addView(text(I18n.english(this)
+          ? "Personal setup failed. Enter your key, then Save and test."
+          : "个人配置导入失败，请重新填写密钥并点击保存并测试。", 14, MUTED));
     c.addView(
         text(
             I18n.t(
@@ -1071,40 +1076,43 @@ public class MainActivity extends Activity {
         button(
             I18n.english(this) ? "Use DeepSeek preset" : "使用DeepSeek配置",
             () -> {
-              p.edit()
-                  .putString("base", "https://api.deepseek.com")
-                  .putString("model", "deepseek-flash")
-                  .putString("vision", "deepseek-flash")
-                  .apply();
-              getSharedPreferences("life", 0)
-                  .edit()
-                  .putString("asr_mode", "local")
-                  .remove("asr_blocked")
-                  .apply();
-              message(
-                  I18n.english(this)
-                      ? "DeepSeek chat configured; transcription set to on-device. Enter this"
-                          + " provider’s key and save. Import the Chinese model if needed."
-                      : "已配置DeepSeek聊天，转写设为本机。请填写该服务商的密钥并保存；本机转写需导入中文模型。");
-              render();
+              base.setText("https://api.deepseek.com");
+              model.setText("deepseek-flash");
+              vision.setText("deepseek-flash");
+              message(I18n.english(this)
+                  ? "Preset filled. Your typed key is kept. Enter a DeepSeek key, then Save and test. Use on-device speech."
+                  : "已填入预设，保留刚输入的密钥。请填写 DeepSeek 密钥，再点保存并测试；语音转写使用本机引擎。");
             }),
         button(
-            I18n.english(this) ? "Test saved settings" : "测试已保存的配置",
+            I18n.english(this) ? "Save and test" : "保存并测试",
             () -> {
               if (busy) return;
+              try {
+                AiConfiguration.save(this, base.getText().toString(), key.getText().toString(),
+                    model.getText().toString(), asr.getText().toString(), vision.getText().toString());
+                key.setText("");
+                key.setHint(I18n.t(this, "已保存密钥；留空保留"));
+              } catch (Exception e) { message(e.getMessage()); return; }
               busy = true;
               worker.submit(
                   () -> {
                     String result;
+                    boolean authenticationFailed = false;
                     try {
                       result = new Ai(this).testConfiguration();
                     } catch (Exception e) {
                       result = e.getMessage();
+                      authenticationFailed = e instanceof ApiFailure && ((ApiFailure) e).status == 401;
                     }
+                    final boolean rejectedKey = authenticationFailed;
                     final String message = result;
                     runOnUiThread(
                         () -> {
                           busy = false;
+                          if (rejectedKey) {
+                            key.setError(I18n.english(this) ? "Key rejected; replace and test again" : "密钥被拒绝，请重新填写后测试");
+                            key.requestFocus();
+                          }
                           message(message);
                         });
                   });
@@ -1112,9 +1120,8 @@ public class MainActivity extends Activity {
     c.addView(
         text(
             I18n.english(this)
-                ? "The test sends your key to the saved provider’s /models endpoint; no personal"
-                    + " records or audio are sent. Save edits before testing."
-                : "测试仅向已保存的服务商/models接口发送密钥，不发送私人记录或录音。修改后先保存再测试。",
+                ? "Save and test uses this form, saves the key encrypted, then checks models and a short synthetic text generation. No personal records/audio sent; a small API charge may apply."
+                : "保存并测试使用当前输入，加密保存密钥后验证模型列表与简短示例生成。不发送私人记录或录音，可能产生少量 API 费用。",
             12,
             MUTED));
     row(
@@ -1123,19 +1130,8 @@ public class MainActivity extends Activity {
             I18n.t(MainActivity.this, "保存设置"),
             () -> {
               try {
-                String normalized = Ai.normalizeBase(base.getText().toString());
-                if (model.getText().toString().trim().isEmpty()
-                    || asr.getText().toString().trim().isEmpty())
-                  throw new IOException(I18n.t(MainActivity.this, "请填写模型名称"));
-                if (!key.getText().toString().trim().isEmpty())
-                  Secrets.set(this, key.getText().toString().trim());
-                p.edit()
-                    .putString("base", normalized)
-                    .putString("model", model.getText().toString().trim())
-                    .putString("asr", asr.getText().toString().trim())
-                    .putString("vision", vision.getText().toString().trim())
-                    .apply();
-                getSharedPreferences("life", 0).edit().remove("asr_blocked").apply();
+                AiConfiguration.save(this, base.getText().toString(), key.getText().toString(),
+                    model.getText().toString(), asr.getText().toString(), vision.getText().toString());
                 message(I18n.t(MainActivity.this, "已保存"));
                 render();
               } catch (Exception e) {
@@ -1145,7 +1141,7 @@ public class MainActivity extends Activity {
         button(
             I18n.t(MainActivity.this, "关闭 AI"),
             () -> {
-              p.edit().remove("secret").apply();
+              p.edit().remove("secret").remove("key_provider").apply();
               render();
             }));
     LinearLayout data = card();

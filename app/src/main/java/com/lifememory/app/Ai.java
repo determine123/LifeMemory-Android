@@ -28,31 +28,11 @@ public class Ai {
   }
 
   static String normalizeBase(String value) throws IOException {
-    String base = value.trim().replaceAll("/+$", "");
-    for (String endpoint : new String[] {"/chat/completions", "/audio/transcriptions", "/models"})
-      if (base.endsWith(endpoint)) base = base.substring(0, base.length() - endpoint.length());
-    try {
-      URL url = new URL(base);
-      if (!url.getProtocol().equals("https")
-          || url.getHost().isEmpty()
-          || url.getUserInfo() != null
-          || url.getQuery() != null
-          || url.getRef() != null)
-        throw new IOException(
-            "Use an HTTPS base URL without credentials, query parameters or fragments /"
-                + " 请使用无凭据、查询参数或锚点的HTTPS基础地址");
-    } catch (MalformedURLException e) {
-      throw new IOException("Invalid API base URL / API地址无效");
-    }
-    return base;
+    return ApiSettings.base(value);
   }
 
   static String normalizeKey(String value) throws IOException {
-    String key = value.trim();
-    if (key.regionMatches(true, 0, "Bearer ", 0, 7)) key = key.substring(7).trim();
-    if (key.isEmpty() || key.matches("(?s).*\\s.*"))
-      throw new IOException("Enter a key without spaces or line breaks / 密钥不能为空或包含空格、换行");
-    return key;
+    return ApiSettings.key(value);
   }
 
   boolean deepSeek() {
@@ -95,6 +75,10 @@ public class Ai {
   }
 
   public String chat(String system, String input) throws Exception {
+    return chat(system, input, 0);
+  }
+
+  private String chat(String system, String input, int testTokens) throws Exception {
     system +=
         I18n.english(ctx)
             ? "\n"
@@ -112,6 +96,10 @@ public class Ai {
                 new JSONArray()
                     .put(new JSONObject().put("role", "system").put("content", system))
                     .put(new JSONObject().put("role", "user").put("content", input)));
+    if (testTokens > 0) {
+      body.put("max_tokens", testTokens);
+      if (deepSeek()) body.put("thinking", new JSONObject().put("type", "disabled"));
+    }
     try (OutputStream out = c.getOutputStream()) {
       out.write(body.toString().getBytes(StandardCharsets.UTF_8));
     }
@@ -226,13 +214,13 @@ public class Ai {
     for (int i = 0; i < data.length(); i++)
       if (selected.equals(data.getJSONObject(i).optString("id"))) found = true;
     boolean en = I18n.english(ctx);
-    return (en ? "Authentication passed; /models returned HTTP 200. " : "鉴权通过，/models返回HTTP 200。")
-        + (found
-            ? (en ? "Selected chat model is listed. " : "当前对话模型在列表中。")
-            : (en ? "Selected chat model is not listed; check its name. " : "当前对话模型未在列表中，请检查名称。"))
-        + (en
-            ? "This checks authentication and the model list only; it does not test billing, chat"
-                + " generation or audio transcription."
-            : "此测试仅验证鉴权和模型列表，不验证余额、实际生成或语音转写。");
+    String answer = chat("Connection check. Reply only OK.", "Synthetic connectivity test; no personal data.", 64);
+    if (answer.trim().isEmpty()) throw new IOException("Empty test answer / 测试回复为空");
+    return (en ? "Saved settings: authentication and sample text generation passed. "
+        : "已保存配置：鉴权与实际文本生成均通过。")
+        + (found ? "" : (en ? "Selected model was not listed, but generation succeeded. "
+            : "模型未出现在列表中，但实际生成成功。"))
+        + (en ? "No personal records/audio sent. Speech transcription is not tested."
+            : "未发送私人记录或录音；此测试不验证语音转写。");
   }
 }

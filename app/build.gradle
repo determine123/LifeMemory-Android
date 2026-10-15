@@ -5,8 +5,13 @@ android {
  buildToolsVersion '35.0.0'
  packagingOptions { jniLibs { useLegacyPackaging true } }
  bundle { language { enableSplit = false } }
- defaultConfig { applicationId 'com.lifememory.app'; minSdk 26; targetSdk 35; versionCode 16; versionName '0.8.0-alpha09'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
+ defaultConfig { applicationId 'com.lifememory.app'; minSdk 26; targetSdk 35; versionCode 17; versionName '0.8.0-alpha10'; testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner' }
  compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+ if (project.hasProperty('personalAssetsDir')) {
+  layout.buildDirectory.set(rootProject.layout.projectDirectory.dir('.tool-tmp/personal-build'))
+  sourceSets.main.assets.srcDir(project.property('personalAssetsDir'))
+  defaultConfig.versionName = defaultConfig.versionName + '-personal'
+ }
 }
 dependencies {
  implementation files('libs/sherpa-onnx-1.13.8.aar')
