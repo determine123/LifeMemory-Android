@@ -46,4 +46,29 @@ public class SpeechChunksTest {
       fail("Expected invalid interval rejection");
     } catch (IllegalArgumentException expected) { }
   }
+
+  @Test public void rollingEnergySelectsQuietestWindowAtNonzeroOffset() {
+    int offset = 7003;
+    float[] audio = new float[offset + 65 * SpeechChunks.RATE];
+    Arrays.fill(audio, 0.2f);
+    Arrays.fill(audio, offset + 26 * SpeechChunks.RATE, offset + 27 * SpeechChunks.RATE, 0.01f);
+    Arrays.fill(audio, offset + 28 * SpeechChunks.RATE, offset + 29 * SpeechChunks.RATE, 0f);
+    int end = SpeechChunks.nextEnd(audio, offset, audio.length);
+    assertTrue(end > offset + 28 * SpeechChunks.RATE && end < offset + 29 * SpeechChunks.RATE);
+  }
+
+  @Test public void repeatedPausesStillCoverEverySampleThroughIrregularTail() {
+    float[] audio = new float[SpeechChunks.RATE * 95 + 137];
+    Arrays.fill(audio, 0.1f);
+    for (int second : new int[] {28, 56, 84})
+      Arrays.fill(audio, second * SpeechChunks.RATE, (second + 1) * SpeechChunks.RATE, 0f);
+    int start = 0, total = 0;
+    while (start < audio.length) {
+      int end = SpeechChunks.nextEnd(audio, start, audio.length);
+      assertTrue(end > start && end - start <= SpeechChunks.MAX);
+      total += end - start;
+      start = end;
+    }
+    assertEquals(audio.length, total);
+  }
 }

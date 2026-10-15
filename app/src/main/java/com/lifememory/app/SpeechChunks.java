@@ -16,13 +16,21 @@ final class SpeechChunks {
     double lowest = average * 0.1;
     // Only move a boundary into a clearly quieter 200 ms window in the last 5 s.
     // Quiet speech is still decoded; this is not a neural speech detector.
-    for (int at = limit - 5 * RATE; at + window <= limit; at += RATE / 50) {
-      double energy = 0;
-      for (int i = at; i < at + window; i++) energy += samples[i] * (double) samples[i];
-      energy /= window;
+    int searchStart = limit - 5 * RATE, step = RATE / 50;
+    double windowSum = 0;
+    for (int i = searchStart; i < searchStart + window; i++)
+      windowSum += samples[i] * (double) samples[i];
+    for (int at = searchStart; at + window <= limit; at += step) {
+      double energy = Math.max(0, windowSum) / window;
       if (energy <= lowest) {
         lowest = energy;
         best = at + window / 2;
+      }
+      if (at + step + window <= limit) {
+        for (int i = at; i < at + step; i++) {
+          windowSum -= samples[i] * (double) samples[i];
+          windowSum += samples[i + window] * (double) samples[i + window];
+        }
       }
     }
     return best;

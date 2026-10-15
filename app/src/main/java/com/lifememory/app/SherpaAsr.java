@@ -133,8 +133,9 @@ final class SherpaAsr {
     OfflineRecognizer recognizer = recognizer(root);
     try {
       for (float[] turn : turns) {
-        int start = Math.max(0, Math.round(turn[0] * 16000)),
-            end = Math.min(samples.length, Math.round(turn[1] * 16000));
+        // Keep exact sample bounds without a float seconds round-trip for whole recordings.
+        int start = diar ? Math.max(0, Math.round(turn[0] * 16000)) : 0,
+            end = diar ? Math.min(samples.length, Math.round(turn[1] * 16000)) : samples.length;
         for (int at = start; at < end; ) {
           int until = SpeechChunks.nextEnd(samples, at, end);
           if (SpeechChunks.digitalSilence(samples, at, until)) {
