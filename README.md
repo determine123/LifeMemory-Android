@@ -70,3 +70,5 @@ Independently implemented in native Java. Omi, Memex and Auday informed the life
 ## Related projects and search filters
 
 [Reference choices and implementation](reference-notes/PROJECTS-2026-10-14.md). Search supports `type:audio`, `topic:work`, `pinned:true`, `period:evening`, exact dates and dated periods such as `yesterday evening`.
+
+Pause-aware SenseVoice chunking is implemented in source; five JVM algorithm tests passed. Android build/native regression are pending; the alpha06 APK does not include this change. [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)

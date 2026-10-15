@@ -128,20 +128,19 @@ final class SherpaAsr {
       } finally {
         d.release();
       }
-    } else
-      for (int start = 0; start < samples.length; start += 30 * 16000)
-        turns.add(
-            new float[] {
-              start / 16000f, Math.min(samples.length, start + 30 * 16000) / 16000f, -1
-            });
+    } else turns.add(new float[] {0, samples.length / 16000f, -1});
     turns.sort((a, b) -> Float.compare(a[0], b[0]));
     OfflineRecognizer recognizer = recognizer(root);
     try {
       for (float[] turn : turns) {
         int start = Math.max(0, Math.round(turn[0] * 16000)),
             end = Math.min(samples.length, Math.round(turn[1] * 16000));
-        for (int at = start; at < end; at += 30 * 16000) {
-          int until = Math.min(end, at + 30 * 16000);
+        for (int at = start; at < end; ) {
+          int until = SpeechChunks.nextEnd(samples, at, end);
+          if (SpeechChunks.digitalSilence(samples, at, until)) {
+            at = until;
+            continue;
+          }
           OfflineStream stream = recognizer.createStream();
           String value;
           try {
@@ -151,7 +150,10 @@ final class SherpaAsr {
           } finally {
             stream.release();
           }
-          if (value.isEmpty()) continue;
+          if (value.isEmpty()) {
+            at = until;
+            continue;
+          }
           if (text.length() > 0) text.append('\n');
           text.append(value);
           parts.put(
@@ -161,6 +163,7 @@ final class SherpaAsr {
                   .put("text", value)
                   .put("speaker", turn[2] < 0 ? "" : "Speaker " + ((int) turn[2] + 1))
                   .put("speaker_auto", diar));
+          at = until;
         }
       }
     } finally {

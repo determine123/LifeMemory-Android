@@ -70,3 +70,5 @@ APK 位于 `app/build/outputs/apk/debug/app-debug.apk`。不要提交密钥或�
 ## 相关项目与检索筛选
 
 [项目筛选与落地说明](reference-notes/PROJECTS-2026-10-14.md)。搜索支持 `type:audio`、`topic:工作`、`pinned:true`、`period:evening`、具体日期与“昨天晚上”等时段表达。
+
+源码已加入 SenseVoice 停顿分段，5 项 JVM 算法测试通过；Android 构建与原生模型回归待完成，现有 alpha06 APK 不包含本次改动。 [2026-10-15](reference-notes/ASR-IMPROVEMENTS-2026-10-15.md)
