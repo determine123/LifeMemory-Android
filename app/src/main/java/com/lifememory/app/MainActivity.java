@@ -37,6 +37,8 @@ public class MainActivity extends Activity {
   LinearLayout body;
   String selected = Store.day(System.currentTimeMillis());
   private int tab = 0;
+  private CircleUi circle;
+  boolean circleVisible() { return tab == 3; }
   final ExecutorService worker = Executors.newSingleThreadExecutor();
   private Uri cameraUri;
   AlertDialog playbackDialog;
@@ -117,6 +119,7 @@ public class MainActivity extends Activity {
   }
 
   protected void onDestroy() {
+    if (circle != null) circle.close();
     statusHandler.removeCallbacksAndMessages(null);
     unregisterReceiver(receiver);
     if (playbackDialog != null) playbackDialog.dismiss();
@@ -264,6 +267,7 @@ public class MainActivity extends Activity {
                 ? (I18n.english(this) ? "Your day. Four moments." : "一天，四次回顾。")
                 : tab == 1
                     ? I18n.t(MainActivity.this, "让记忆有迹可循")
+                    : tab == 3 ? (I18n.english(this) ? "Share with friends." : "和好友分享日常。")
                     : I18n.t(MainActivity.this, "把一天留下来"),
             28,
             INK));
@@ -286,8 +290,11 @@ public class MainActivity extends Activity {
             () -> {
               tab = 2;
               render();
-            }));
+            }),
+        button(I18n.english(this) ? "Circle" : "朋友圈", () -> { tab = 3; render(); }));
     LinearLayout navigation = (LinearLayout) root.getChildAt(root.getChildCount() - 1);
+    for (int i = 0; i < navigation.getChildCount(); i++)
+      ((Button) navigation.getChildAt(i)).setTextSize(13);
     Button activeTab = (Button) navigation.getChildAt(tab);
     activeTab.setBackground(shape(INK, 10));
     activeTab.setTextColor(0xfff4f2e9);
@@ -297,7 +304,8 @@ public class MainActivity extends Activity {
     root.addView(scroll, new LinearLayout.LayoutParams(-1, 0, 1));
     if (tab == 0) timeline();
     else if (tab == 1) memory();
-    else settings();
+    else if (tab == 2) settings();
+    else { if (circle == null) circle = new CircleUi(this); circle.render(); }
   }
 
   private void pickDay() {
@@ -539,6 +547,11 @@ public class MainActivity extends Activity {
 
   protected void onActivityResult(int r, int result, Intent data) {
     super.onActivityResult(r, result, data);
+    if (r == 80) {
+      if (circle == null) circle = new CircleUi(this);
+      circle.picked(result == RESULT_OK ? data : null);
+      return;
+    }
     if ((r == 50 || r == 51) && result == RESULT_OK && data != null && data.getData() != null) {
       importAudio(data.getData());
       return;

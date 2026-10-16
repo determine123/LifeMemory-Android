@@ -1,0 +1,27 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      SOCIAL_SIGNUP_CODE: ${SOCIAL_SIGNUP_CODE:?Set SOCIAL_SIGNUP_CODE in .env}
+    volumes:
+      - circle_data:/data
+    networks: [circle]
+  https:
+    image: caddy:2
+    restart: unless-stopped
+    environment:
+      CIRCLE_DOMAIN: ${CIRCLE_DOMAIN:?Set CIRCLE_DOMAIN in .env}
+    ports: ["80:80", "443:443"]
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks: [circle]
+    depends_on: [api]
+volumes:
+  circle_data:
+  caddy_data:
+  caddy_config:
+networks:
+  circle:

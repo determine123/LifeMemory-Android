@@ -29,7 +29,10 @@ public class Secrets {
   }
 
   static String encrypt(String value) throws Exception {
-    value = Ai.normalizeKey(value);
+    return seal(Ai.normalizeKey(value));
+  }
+
+  static String seal(String value) throws Exception {
     Cipher a = Cipher.getInstance("AES/GCM/NoPadding");
     a.init(Cipher.ENCRYPT_MODE, key());
     return Base64.encodeToString(a.getIV(), Base64.NO_WRAP)
@@ -40,7 +43,10 @@ public class Secrets {
   }
 
   public static String get(Context c) throws Exception {
-    String s = c.getSharedPreferences("ai", 0).getString("secret", "");
+    return decrypt(c.getSharedPreferences("ai", 0).getString("secret", ""));
+  }
+
+  static String decrypt(String s) throws Exception {
     if (s.isEmpty()) return "";
     String[] p = s.split(":");
     Cipher a = Cipher.getInstance("AES/GCM/NoPadding");
